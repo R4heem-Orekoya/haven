@@ -1,12 +1,33 @@
+"use client"
+
 import Link from "next/link"
 import Logo from "./Logo"
 import { Button } from "./ui/button"
 import MobileNav from "./MobileNav"
-import { currentUser } from "@/lib/db/queries/user"
 import ProfilePicture from "./profile-picture"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Bookmark, LayoutDashboard, LogOut } from "lucide-react"
+import { useCallback } from "react"
+import { logoutAction } from "@/actions/auth"
+import { toast } from "sonner"
+import { User } from "@prisma/client"
 
-const Navbar = async () => {
-   const signedInuser = await currentUser()
+interface NavbarProps {
+	signedInuser: User | null
+}
+
+const Navbar = ({ signedInuser }: NavbarProps) => {
+   const handleLogout = useCallback(() => {
+		const promise = logoutAction("/")
+		toast.promise(promise, {
+			loading: 'Logging out...',
+			success: () => {
+				return "Logged out successfully!";
+			},
+			error: "Couldn't logout, try again!",
+		})
+	}, [])
+   
    return (
       <div className="sticky top-0 z-[999] bg-white">
          <header className="h-16 flex justify-between items-center container mx-auto px-4 md:px-6 lg:px-8">
@@ -24,8 +45,34 @@ const Navbar = async () => {
 
                <div className="flex space-x-4">
                   {signedInuser ? (
-                     <ProfilePicture image={signedInuser.image!} name={signedInuser.name!} />
-                  ): (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           <ProfilePicture image={signedInuser.image!} name={signedInuser.name!} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-[250px] mt-3 border z-[999]">
+                           <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem asChild className="cursor-pointer">
+                              <Link href="/dashboard">
+                                 <LayoutDashboard className="text-muted-foreground"/>
+                                 Dashboard
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild className="cursor-pointer">
+                              <Link href="/dashboard">
+                                 <Bookmark className="text-muted-foreground"/>
+                                 Saved Properties
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild >
+                              <button onClick={handleLogout} className="text-red-500 hover:text-red-500 cursor-pointer w-full">
+                                 <LogOut />
+                                 Logout 
+                              </button>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : (
                      <>
                         <Button variant="outline" asChild>
                            <Link href="/sign-in">

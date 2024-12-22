@@ -1,6 +1,6 @@
 "use server"
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/lib/db/queries/user";
 import { signInSchema, signUpSchema, TSignInSchema, TSignUpSchema } from "@/lib/validators/auth-schema";
@@ -86,4 +86,8 @@ export const signinAction = async (credentials: TSignInSchema) => {
       
       throw error
    }
+}
+
+export const logoutAction = async (redirectTo: string) => {
+   await signOut({ redirectTo })
 }

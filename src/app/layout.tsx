@@ -3,7 +3,8 @@ import "./globals.css";
 import { ReactNode } from "react";
 import { Urbanist, Inter_Tight } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
+import { currentUser } from "@/lib/db/queries/user";
 
 // fonts: Mulish, Open_Sans, Outfit,
 
@@ -27,13 +28,15 @@ const openSans = Inter_Tight({
   variable: "--font-open-sans"
 })
 
-export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
+export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
+  const signedInuser = await currentUser()
+  
   return (
     <html lang="en">
       <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
-        <Navbar />
+        <Navbar signedInuser={signedInuser}/>
         {children}
-        <Toaster />
+        <Toaster position="top-center" className="font-Montserrat"/>
       </body>
     </html>
   );
