@@ -25,8 +25,6 @@ export const signUpSchema = z.object({
       path: ["confirmPassword"]
    })
    
-   
-   
 export const signInSchema = z.object({
    email: z.string().email({message: "Enter a valid email."}),
    password: z.string().min(1, {message: "This field cannot be empty."})

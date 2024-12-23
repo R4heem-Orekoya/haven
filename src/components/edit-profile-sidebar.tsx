@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 
 const routes = [
    { label: "Profile", path: "profile" },
+   // { label: "Online Presence", path: "online-presence" },
    { label: "Change Password", path: "password" },
    { label: "Change Account Type", path: "account-type" },
 ]
@@ -18,7 +19,7 @@ const EditProfileSidebar = () => {
       <aside>
          <ul className='flex gap-4 sm:flex-col sm:gap-2 overflow-x-auto'>
             {routes.map((route) => (
-               <li className={cn("text-muted-foreground max-sm:text-sm hover:text-primary transition-colors duration-300", { "text-primary font-semibold": extractedPath === route.path })}>
+               <li key={route.path} className={cn("text-muted-foreground max-sm:text-sm hover:text-primary transition-colors duration-300", { "text-primary font-semibold": extractedPath === route.path })}>
                   <Link href={`${route.path}`}>
                      {route.label}
                   </Link>
