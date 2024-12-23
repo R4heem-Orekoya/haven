@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,18 +8,22 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  name           String?
-  email          String?   @unique
-  accountType    AccountType
-  emailVerified  DateTime? @map("email_verified")
-  image          String?
-  image_key      String?
-  hashedPassword String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  
-  account  Account?
+  id                 String      @id @default(cuid())
+  name               String?
+  email              String?     @unique
+  accountType        AccountType
+  address            String?
+  bio                String?
+  personalWebsiteUrl String?     @map("personal_website_url")
+  schedulingAppUrl   String?     @map("scheduling_app_url")
+  emailVerified      DateTime?   @map("email_verified")
+  image              String?
+  image_key          String?
+  hashedPassword     String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  account Account?
 }
 
 model Account {
