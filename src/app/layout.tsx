@@ -5,6 +5,8 @@ import { Urbanist, Inter_Tight } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/navbar";
 import { currentUser } from "@/lib/db/queries/user";
+import { SessionProvider } from "next-auth/react"
+import { auth } from "@/auth";
 
 // fonts: Mulish, Open_Sans, Outfit,
 
@@ -30,14 +32,17 @@ const openSans = Inter_Tight({
 
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
   const signedInuser = await currentUser()
+  const session = await auth()
   
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
-        <Navbar signedInuser={signedInuser}/>
-        {children}
-        <Toaster position="top-center" className="font-Montserrat"/>
-      </body>
+      <SessionProvider session={session}>
+        <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
+          <Navbar signedInuser={signedInuser}/>
+          {children}
+          <Toaster position="top-center" className="font-Montserrat"/>
+        </body>
+      </SessionProvider>
     </html>
   );
 }

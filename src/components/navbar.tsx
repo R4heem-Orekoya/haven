@@ -59,10 +59,10 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild className="cursor-pointer">
-                              <Link href="/dashboard">
+                              {/* <Link href="/dashboard">
                                  <Bookmark className="text-muted-foreground"/>
                                  Saved Properties
-                              </Link>
+                              </Link> */}
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild >
                               <button onClick={handleLogout} className="text-red-500 hover:text-red-500 cursor-pointer w-full">
