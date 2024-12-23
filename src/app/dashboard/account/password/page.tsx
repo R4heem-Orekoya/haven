@@ -69,7 +69,7 @@ const Page = () => {
          <AuthError message={error}/>
          
          <div className="flex pt-4">
-            <Button disabled={isSubmitting} type="submit" className="rounded-3xl">
+            <Button disabled={isSubmitting} type="submit" className="rounded-3xl ml-auto">
                Update Password
                {isSubmitting && <Loader2 className="w-4 h-4 ml-1 animate-spin"/>}
             </Button>
