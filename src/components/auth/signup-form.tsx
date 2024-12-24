@@ -17,7 +17,6 @@ import AuthSuccess from "./success"
 
 const accountTypes = [
    { id: "r1", value: "individual", label: "Individual (searching for property)" },
-   { id: "r2", value: "property_owner", label: "Property Owner" },
    { id: "r3", value: "property_developer", label: "Property Developer" },
    { id: "r4", value: "estate_agent", label: "Estate Agent" },
 ]

@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
         <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
           <Navbar signedInuser={signedInuser}/>
           {children}
-          <Toaster position="top-center" className="font-Montserrat"/>
+          <Toaster position="top-center" theme="light" richColors className="font-Montserrat"/>
         </body>
       </SessionProvider>
     </html>

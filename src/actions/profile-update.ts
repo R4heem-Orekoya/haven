@@ -80,3 +80,32 @@ export const updatePasswordAction = async (data: TChangePasswordSchema) => {
    
    return { success: "Password updated successfully!" }
 }
+
+export const updateAccountTypeAction = async (accountType: "individual" | "estate_agent" | "property_owner" | "property_developer") => {
+   const signedInUser = await currentUser()
+   
+   if(!signedInUser || !signedInUser.email) {
+      return { error: "Unauthorised" }
+   }
+   
+   if(signedInUser.accountType === accountType) {
+      return { error: "Account type is already set to this type." }
+   }
+   
+   if(signedInUser.accountType !== "individual" && accountType === "individual") {
+      return { error: "You cannot revert to an individual account." }
+   }
+   
+   await db.user.update({
+      where: {
+         id: signedInUser.id
+      },
+      data: {
+         accountType
+      }
+   })
+   
+   revalidatePath("/dashboard/account/account-type")
+   
+   return { success: "Account type updated successfully!" }
+}
