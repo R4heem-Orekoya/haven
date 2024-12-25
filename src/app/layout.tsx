@@ -32,11 +32,10 @@ const openSans = Inter_Tight({
 
 export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
   const signedInuser = await currentUser()
-  const session = await auth()
   
   return (
     <html lang="en">
-      <SessionProvider session={session}>
+      <SessionProvider>
         <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
           <Navbar signedInuser={signedInuser}/>
           {children}

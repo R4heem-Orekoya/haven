@@ -93,6 +93,58 @@ const LandingPage = async () => {
          <section className="py-8 lg:py-12 xl:py-16 px-4 lg:px-8">
             <div className="flex max-sm:flex-wrap justify-between items-center gap-4 md:gap-8">
                <Heading>
+                  Discover Your Perfect Property Match
+               </Heading>
+               
+               <p className="w-full max-w-lg lg:text-lg font-extralight text-muted-foreground">
+                  Embark on a journey of discovery through exclusive collections of homes, 
+                  luxury properties to fulfill your aspirations and inspire your imagination
+               </p>
+            </div>
+            
+            <PropertyGrid data={properties} className="mt-12"/>
+            
+            <div className="mt-8 md:mt-12 mx-auto flex justify-center">
+               <Button asChild className="group">
+                  <Link href="#">
+                     See all Properties
+                     <ArrowUpRight className="group-hover:rotate-45 transition duration-300"/>
+                  </Link>
+               </Button>
+            </div>
+         </section>
+      </main>
+   )
+}
+
+export default LandingPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         {/* <section className="py-8 lg:py-12 xl:py-16 px-4 lg:px-8">
+            <div className="flex max-sm:flex-wrap justify-between items-center gap-4 md:gap-8">
+               <Heading>
                   Your Trusted Real Estate Advisor
                </Heading>
                
@@ -127,9 +179,9 @@ const LandingPage = async () => {
                      </p>
                      
                      <button className="size-20 rounded-full bg-[#D0A77A] grid place-items-center relative">
-                        {/* <div className="circular-text">
+                        <div className="circular-text">
                            <span>Contact Us</span>
-                        </div> */}
+                        </div>
                         <ArrowUpRight className="w-10 h-10 text-background"/>
                      </button>
                   </div>
@@ -139,33 +191,4 @@ const LandingPage = async () => {
                   </div>
                </div>
             </div>
-         </section>
-         
-         <section className="py-8 lg:py-12 xl:py-16 px-4 lg:px-8">
-            <div className="flex max-sm:flex-wrap justify-between items-center gap-4 md:gap-8">
-               <Heading>
-                  Discover Your Perfect Property Match
-               </Heading>
-               
-               <p className="w-full max-w-lg lg:text-lg font-extralight text-muted-foreground">
-                  Embark on a journey of discovery through exclusive collections of homes, 
-                  luxury properties to fulfill your aspirations and inspire your imagination
-               </p>
-            </div>
-            
-            <PropertyGrid data={properties} className="mt-12"/>
-            
-            <div className="mt-8 md:mt-12 mx-auto flex justify-center">
-               <Button asChild className="group">
-                  <Link href="#">
-                     See all Properties
-                     <ArrowUpRight className="group-hover:rotate-45 transition duration-300"/>
-                  </Link>
-               </Button>
-            </div>
-         </section>
-      </main>
-   )
-}
-
-export default LandingPage
+         </section> */}

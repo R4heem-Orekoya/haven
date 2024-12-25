@@ -16,6 +16,8 @@ model User {
   bio                String?
   personalWebsiteUrl String?     @map("personal_website_url")
   schedulingAppUrl   String?     @map("scheduling_app_url")
+  phoneNumber        String?
+  accountVisibility  Boolean     @default(false) @map("account_visibility")
   emailVerified      DateTime?   @map("email_verified")
   image              String?
   image_key          String?

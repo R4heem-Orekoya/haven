@@ -5,11 +5,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { User } from "@prisma/client";
 import { Button } from "./ui/button";
 import AuthInfo from "./auth/info";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { updateAccountTypeAction } from "@/actions/profile-update";
 import { toast } from "sonner";
+import { Checkbox } from "./ui/checkbox";
 
 interface EditAccountTypeProps {
    signedInUser: User;
@@ -38,11 +38,22 @@ const accountTypes = [
 
 const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
    const [selectedAccountType, setSelectedAccountType] = useState(signedInUser?.accountType);
+   const [accountVisibility, setAccountVisibility] = useState(signedInUser?.accountVisibility);
    const [isSubmitting, setIsSubmitting] = useState(false)
+   const [isDisabled, setIsDisabled] = useState(true)
+   
+   const toggleAccountVisibility = () => {
+      setAccountVisibility((prev) => !prev)
+   }
+   
+   useEffect(() => {
+      const hasChanged = accountVisibility !== signedInUser?.accountVisibility || selectedAccountType !== signedInUser?.accountType;
+      setIsDisabled(!hasChanged)
+   }, [accountVisibility, selectedAccountType])
    
    const handleSubmit = async () => {
       setIsSubmitting(true)
-      updateAccountTypeAction(selectedAccountType)
+      updateAccountTypeAction({ accountType: selectedAccountType, accountVisibility })
          .then((callback) => {
             if(callback.success && !callback.error) {
                toast.success(callback.success)
@@ -60,15 +71,13 @@ const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
    }
    
    return (
-      <div>
+      <div className="space-y-6">
          <RadioGroup 
             className="gap-2" value={selectedAccountType}
             onValueChange={(value: "individual" | "estate_agent" | "property_owner" | "property_developer") => setSelectedAccountType(value)}
          >
             {accountTypes.map((type, i) => (
-               <div key={type.id} className={cn("relative flex w-full items-start gap-2 rounded-lg border border-input p-4 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring", {
-                  "hidden" : signedInUser.accountType !== "individual" && i === 0,
-               })}>
+               <div key={type.id} className="relative flex w-full items-start gap-2 rounded-lg border border-input p-4 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring">
                   <RadioGroupItem
                      value={type.value}
                      id={type.id}
@@ -86,18 +95,19 @@ const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
             ))}
          </RadioGroup>
          
-         {signedInUser.accountType === "individual" && (
-            <div className="mt-6 space-y-4">
-               <AuthInfo 
-                  message="If you update your account type to Property Developer or Estate Agent, 
-                  you will not be able to revert to an Individual account."
-               />
-            </div>
-         )}
+         <div className="flex items-center gap-2">
+            <Checkbox id="account_visibility" defaultChecked={accountVisibility} onCheckedChange={toggleAccountVisibility}/>
+            <Label htmlFor="account_visibility" className="cursor-pointer">
+               Account Visibilty
+            </Label>
+         </div>
          
-         <div className="mt-4 flex">
+         <AuthInfo 
+            message={`If account visibility is checked and you are either an estate agnet or a property developer, your account will be visible on the property developers or estate agents page.`}/>
+         
+         <div className="flex">
             <Button 
-               disabled={isSubmitting || selectedAccountType === signedInUser?.accountType} 
+               disabled={isSubmitting || isDisabled} 
                className="rounded-3xl ml-auto"
                onClick={handleSubmit}
             >

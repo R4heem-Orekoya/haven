@@ -6,6 +6,8 @@ import { changePasswordSchema, TChangePasswordSchema, TUpdateProfileSchema, upda
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
+type TAccountType = "individual" | "estate_agent" | "property_owner" | "property_developer"
+
 export const updateProfileAction = async (data: TUpdateProfileSchema) => {
    const signedInUser = await currentUser()
    
@@ -19,7 +21,7 @@ export const updateProfileAction = async (data: TUpdateProfileSchema) => {
       return { error: "Invalid input. Please check your data and try again." }
    }
    
-   const { name, address, bio, personalWebsiteUrl, scheduleAppUrl } = validatedData.data
+   const { name, address, bio, personalWebsiteUrl, scheduleAppUrl, phoneNumber } = validatedData.data
    
    await db.user.update({
       where: {
@@ -29,6 +31,7 @@ export const updateProfileAction = async (data: TUpdateProfileSchema) => {
          name,
          address,
          bio,
+         phoneNumber,
          personalWebsiteUrl,
          schedulingAppUrl: scheduleAppUrl
       }
@@ -81,19 +84,11 @@ export const updatePasswordAction = async (data: TChangePasswordSchema) => {
    return { success: "Password updated successfully!" }
 }
 
-export const updateAccountTypeAction = async (accountType: "individual" | "estate_agent" | "property_owner" | "property_developer") => {
+export const updateAccountTypeAction = async ({ accountType, accountVisibility }: { accountType: TAccountType , accountVisibility: boolean} ) => {
    const signedInUser = await currentUser()
    
    if(!signedInUser || !signedInUser.email) {
       return { error: "Unauthorised" }
-   }
-   
-   if(signedInUser.accountType === accountType) {
-      return { error: "Account type is already set to this type." }
-   }
-   
-   if(signedInUser.accountType !== "individual" && accountType === "individual") {
-      return { error: "You cannot revert to an individual account." }
    }
    
    await db.user.update({
@@ -101,11 +96,12 @@ export const updateAccountTypeAction = async (accountType: "individual" | "estat
          id: signedInUser.id
       },
       data: {
-         accountType
+         accountType,
+         accountVisibility
       }
    })
    
    revalidatePath("/dashboard/account/account-type")
    
-   return { success: "Account type updated successfully!" }
+   return { success: "Account updated successfully!" }
 }

@@ -26,6 +26,7 @@ const EditProfileForm = ({ signedInUser }: EditProfileFormProps) => {
          name: signedInUser.name || "",
          address: signedInUser.address || "",
          bio: signedInUser.bio || "",
+         phoneNumber: signedInUser.phoneNumber || "",
          personalWebsiteUrl: signedInUser.personalWebsiteUrl || "",
          scheduleAppUrl: signedInUser.schedulingAppUrl || "",
       }
@@ -43,6 +44,7 @@ const EditProfileForm = ({ signedInUser }: EditProfileFormProps) => {
          (formValues.name || "") !== (signedInUser.name || "") ||
          (formValues.address || "") !== (signedInUser.address || "") ||
          (formValues.bio || "") !== (signedInUser.bio || "") ||
+         (formValues.phoneNumber || "") !== (signedInUser.phoneNumber || "") ||
          (formValues.personalWebsiteUrl || "") !== (signedInUser.personalWebsiteUrl || "") ||
          (formValues.scheduleAppUrl || "") !== (signedInUser.schedulingAppUrl || "");
          
@@ -89,6 +91,13 @@ const EditProfileForm = ({ signedInUser }: EditProfileFormProps) => {
             <p className="text-xs text-muted-foreground">
                Brief summary of your profile (This can be useful if you are an estate agent or a property developer.)
             </p>
+         </div>
+         <div className="grid gap-2">
+            <Label htmlFor="phone_number">
+               Phone Number
+            </Label>
+            <Input {...register("phoneNumber")} id="phone_number" />
+            {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber.message}</p>}
          </div>
          <div className="grid gap-2">
             <Label htmlFor="personal_website">
