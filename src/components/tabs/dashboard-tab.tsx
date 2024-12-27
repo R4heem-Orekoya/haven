@@ -4,13 +4,14 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { House, Bookmark, MessageCircleMore, Plus } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { PropertyGrid } from "../property-grid";
+import { PropertyGrid } from "../property/property-grid";
 import { User } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { properties } from "@/consts/property-example";
 import PropertyListing from "./property-listing";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const tabs = [
    { icon: Bookmark, label: "Saved Properties", value: "saved_properties", new: false, component: PropertyGrid },
@@ -54,9 +55,11 @@ export default function DashboardTab({ signedInUser }: DashboardTabProps) {
                   </TabsTrigger>
                ))}
                {signedInUser.accountType !== "individual" && (
-                  <Button className="ml-auto" size="sm">
-                     Create a new Listing
-                     <Plus />
+                  <Button asChild className="ml-auto" size="sm">
+                     <Link href="/dashboard/listing/create" className="flex items-center gap-2">
+                        Create a new Listing
+                        <Plus />
+                     </Link>
                   </Button>
                )}
             </TabsList>

@@ -4,7 +4,7 @@ export const propertyTypes = [
       label: "All types",
    },
    {
-      value: "flat/apartment",
+      value: "apartment",
       label: "Flat/apartment",
    },
    {
@@ -16,7 +16,7 @@ export const propertyTypes = [
       label: "Land",
    },
    {
-      value: "commercial-property",
+      value: "commercial",
       label: "Commercial Property",
    },
 ]

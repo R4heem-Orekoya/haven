@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { FC, useState } from "react"
 import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Command } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
@@ -9,19 +9,18 @@ import { Label } from "../ui/label"
 import { Button } from "../ui/button"
 import { states } from "@/consts/states"
 import { FieldErrors, UseFormSetValue } from "react-hook-form"
-import { TSearchSchema } from "@/lib/validators/search-schema"
 
 interface LocationProps {
-   setValue: UseFormSetValue<TSearchSchema>
-   errors: FieldErrors<TSearchSchema>
+   setValue: UseFormSetValue<any>
+   errors: FieldErrors<any>
 }
 
-const Location = ({ setValue, errors }: LocationProps) => {
+const Location: FC<LocationProps<any>> = ({ setValue, errors }: LocationProps) => {
    const [open, setOpen] = useState(false)
    const [location, setLocation] = useState("")
 
    return (
-      <div className="flex flex-col gap-2">
+      <div className="grid gap-2">
          <Label className="text-xs font-medium">Location</Label>
          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>

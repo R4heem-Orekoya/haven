@@ -2,8 +2,8 @@ import { formatPrice } from "@/lib/utils"
 import Image from "next/image"
 import { Bath, Bed, Edit, MapPin, MoreVertical, Ruler, Trash2 } from "lucide-react"
 import { property } from "@/types/property"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Button } from "./ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
 
 interface PropertyCardProps {
    property: property

@@ -1,5 +1,5 @@
 import { properties } from "@/consts/property-example"
-import { DashboardPropertyGrid } from "../property-grid"
+import { DashboardPropertyGrid } from "../property/property-grid"
 
 const PropertyListing = () => {
    return (
