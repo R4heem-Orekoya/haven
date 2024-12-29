@@ -26,30 +26,38 @@ export const propertySchema = z.object({
       .nonempty("Square footage is required")
       .transform((val) => Number(val))
       .pipe(z.number().positive("Square footage must be greater than 0")),
-   amenities: z.string().transform((val) =>
-      val.split(",").map(a => a.trim()).filter(Boolean).join("")
+   amenities: z.string().refine((value) => {
+      if(value === "") return true
+      const words = value.split(",")
+      
+      const isValid = words.every((word) => word.trim().length)
+      return isValid;
+   },
+      {
+         message: "Amenities must be separated by commas.",
+      }
    ),
    images: z.array(z.string()).min(1, "At least one image is required").max(8, "Maximum 8 images allowed"),
    status: z.enum(["draft", "published"])
 })
-.superRefine((data, ctx) => {
-   if (data.type === "apartment" || data.type === "house") {
-      if (data.beds === undefined) {
-         ctx.addIssue({
-            code: "custom",
-            message: "Number of bedrooms is required for houses and apartments",
-            path: ["beds"],
-         })
+   .superRefine((data, ctx) => {
+      if (data.type === "apartment" || data.type === "house") {
+         if (data.beds === undefined) {
+            ctx.addIssue({
+               code: "custom",
+               message: "Number of bedrooms is required for houses and apartments",
+               path: ["beds"],
+            })
+         }
+
+         if (data.baths === undefined) {
+            ctx.addIssue({
+               code: "custom",
+               message: "Number of bathrooms is required for houses and apartments",
+               path: ["baths"]
+            })
+         }
       }
-      
-      if (data.baths === undefined) {
-         ctx.addIssue({
-            code: "custom",
-            message: "Number of bathrooms is required for houses and apartments",
-            path: ["baths"]
-         })
-      }
-   }
-})
+   })
 
 export type TPropertySchema = z.infer<typeof propertySchema>

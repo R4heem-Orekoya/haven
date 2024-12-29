@@ -319,14 +319,17 @@ export const CreateListing = () => {
             </form>
             
             <Preview 
-               image={images[0]}
-               listingType={formState.listingType}
-               location={formState.location?.address}
-               price={formState.price}
-               sqft={formState.sqft}
-               title={formState.title}
-               baths={formState.baths}
-               beds={formState.beds}
+               data={{
+                  image: images[0],
+                  listingType: formState.listingType,
+                  location: formState.location?.address,
+                  price: formState.price,
+                  sqft: formState.sqft,
+                  title: formState.title,
+                  baths: formState.baths,
+                  beds: formState.beds,
+                  type: formState.type
+               }}
             />
          </section>
 
@@ -355,17 +358,20 @@ const Header = () => {
 }
 
 interface PreviewProps {
-   image: string | undefined
-   title: string | undefined
-   listingType: "rent" | "sale" | "shortlet" | undefined
-   location: string | undefined
-   beds: number | undefined
-   baths: number | undefined
-   sqft: number | undefined
-   price: number | undefined 
+   data: {
+      image: string | undefined
+      title: string | undefined
+      listingType: "rent" | "sale" | "shortlet" | undefined
+      location: string | undefined
+      beds: number | undefined
+      baths: number | undefined
+      sqft: number | undefined
+      price: number | undefined 
+      type: "land" | "commercial" | "apartment" | "house" 
+   }
 }
 
-const Preview = ({ image, listingType, location, price, sqft, title, baths, beds }: PreviewProps) => {
+const Preview = ({ data: { image, listingType, location, price, sqft, title, baths, beds, type } }: PreviewProps) => {
    const formatPriceWithSuffix = (price: number | undefined, listingType: string | undefined) => {
       if (!price) return "-";
       const suffix = listingType === "shortlet" ? "/night" : listingType === "rent" ? "/year" : "";
@@ -385,7 +391,7 @@ const Preview = ({ image, listingType, location, price, sqft, title, baths, beds
                   className="object-cover"
                />
                <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-xs font-semibold rounded-full">
-                  For {listingType || "Sale"}
+                  For {listingType || "-"}
                </div>
             </div>
             <div className="space-y-1 mt-2">
@@ -393,20 +399,24 @@ const Preview = ({ image, listingType, location, price, sqft, title, baths, beds
                <h3 className="text-lg font-semibold tracking-normal">{title || "No Property Title"}</h3>
             </div>
             <div className="flex items-center gap-2 py-2">
-               {beds && (
-                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
-                     <Bed className="w-3 h-3" />
-                     {beds || "-"}
-                  </p> 
+               {beds && type !== "land" && type !== "commercial" && (
+                  <>
+                     <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Bed className="w-3 h-3" />
+                        {beds || "-"}
+                     </p> 
+                     <div className="w-[1px] h-[10px] bg-zinc-200" />
+                  </>
                )}
-               <div className="w-[1px] h-[10px] bg-zinc-200" />
-               {baths && (
-                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
-                     <Bath className="w-3 h-3 " />
-                     {baths || "-"}
-                  </p>
+               {baths && type !== "land" && type !== "commercial" && (
+                  <>
+                     <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Bath className="w-3 h-3 " />
+                        {baths || "-"}
+                     </p>
+                     <div className="w-[1px] h-[10px] bg-zinc-200" />
+                  </>
                )}
-               <div className="w-[1px] h-[10px] bg-zinc-200" />
                <p className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Ruler className="w-3 h-3" />
                   {sqft?.toLocaleString() || "-"} sq ft

@@ -5,6 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+  return keys.reduce((result, key) => {
+    if (key in obj) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {} as Pick<T, K>);
+}
+
 export function formatPrice(price: number | string, options: {
   currency?: 'USD' | 'EUR' | 'GBP' | 'BDT' | 'NGN'
   notation?: Intl.NumberFormatOptions['notation']
