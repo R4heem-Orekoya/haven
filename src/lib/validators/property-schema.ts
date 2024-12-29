@@ -1,76 +1,55 @@
 import { z } from "zod";
 
 export const propertySchema = z.object({
-   name: z.string().nonempty("This field is required"),
-   description: z.string().nonempty("This field is required"),
-   price: z.number().int().positive("Price must be a positive number"),
-   state: z.string().nonempty("This field is required"),
-   location: z.string().nonempty("This field is required"),
-   amenities: z
-      .string()
-      .nonempty("This field is required")
-      .refine(
-         (value) => value.split(",").every((amenity) => amenity.trim() !== ""),
-         {
-            message: "Each amenity must be separated by a comma and cannot be empty",
-         }
-      ),
-   propertyType: z.enum(["house", "apartment", "land", "commercial"]),
-   beds: z.number().int().positive("Beds must be a positive number").optional(),
-   baths: z
-      .number()
-      .int()
-      .positive("Bathrooms must be a positive number")
-      .optional(),
-   sqft: z.number().int().positive("Square feet must be a positive number").optional(),
-}).superRefine((data, ctx) => {
-   if (data.propertyType === "house" || data.propertyType === "apartment") {
+   title: z.string().min(5, "Title must be at least 5 characters"),
+   description: z.string().min(20, "Description must be at least 20 characters"),
+   price: z.string()
+      .nonempty("Price is required")
+      .transform((val) => Number(val))
+      .pipe(z.number().positive("Price must be greater than 0")),
+   listingType: z.enum(["rent", "sale", "shortlet"]),
+   location: z.object({
+      state: z.string().nonempty("State is required"),
+      city: z.string().nonempty("City is required"), //remove this later
+      address: z.string().nonempty("Address is required"),
+   }),
+   type: z.enum(["house", "apartment", "land", "commercial"]),
+   beds: z.string()
+      .optional()
+      .transform((val) => (val ? Number(val) : undefined))
+      .pipe(z.number().positive().optional()),
+   baths: z.string()
+      .optional()
+      .transform((val) => (val ? Number(val) : undefined))
+      .pipe(z.number().positive().optional()),
+   sqft: z.string()
+      .nonempty("Square footage is required")
+      .transform((val) => Number(val))
+      .pipe(z.number().positive("Square footage must be greater than 0")),
+   amenities: z.string().transform((val) =>
+      val.split(",").map(a => a.trim()).filter(Boolean).join("")
+   ),
+   images: z.array(z.string()).min(1, "At least one image is required").max(8, "Maximum 8 images allowed"),
+   status: z.enum(["draft", "published"])
+})
+.superRefine((data, ctx) => {
+   if (data.type === "apartment" || data.type === "house") {
       if (data.beds === undefined) {
          ctx.addIssue({
             code: "custom",
+            message: "Number of bedrooms is required for houses and apartments",
             path: ["beds"],
-            message: "Number of beds is required for the property type selected",
-         });
+         })
       }
+      
       if (data.baths === undefined) {
          ctx.addIssue({
             code: "custom",
-            path: ["baths"],
-            message: "Number of baths is required for the property type selected",
-         });
-      }
-      if (data.sqft === undefined) {
-         ctx.addIssue({
-            code: "custom",
-            path: ["sqft"],
-            message: "Square feet is required for the property type selected",
-         });
+            message: "Number of bathrooms is required for houses and apartments",
+            path: ["baths"]
+         })
       }
    }
-
-   if (data.propertyType === "land" || data.propertyType === "commercial") {
-      if (data.sqft === undefined) {
-         ctx.addIssue({
-            code: "custom",
-            path: ["sqft"],
-            message: "Square feet is required for the selected property type"
-         });
-      }
-      if (data.beds !== undefined) {
-         ctx.addIssue({
-            code: "custom",
-            path: ["beds"],
-            message: "Beds should not be provided for the selected property type",
-         });
-      }
-      if (data.baths !== undefined) {
-         ctx.addIssue({
-            code: "custom",
-            path: ["baths"],
-            message: "Bathrooms should not be provided for the selected property type",
-         });
-      }
-   }
-});
+})
 
 export type TPropertySchema = z.infer<typeof propertySchema>

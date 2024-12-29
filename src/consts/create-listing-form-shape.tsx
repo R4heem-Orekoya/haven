@@ -19,6 +19,7 @@ interface InputComponentProps {
    register: UseFormRegister<TPropertySchema>,
    errors: FieldErrors<TPropertySchema>
    subLabel?: string
+   placeholder?: string
 }
 
 const InputComponent = ({ register, errors, label, id, type }: InputComponentProps) => {
@@ -28,18 +29,18 @@ const InputComponent = ({ register, errors, label, id, type }: InputComponentPro
             {label}
          </Label>
          <Input {...register(id)} name={id} id={id} type={type} min={1} />
-         {errors["name"] && <p className="text-red-500 text-sm">{errors["name"].message}</p>}
+         {errors[id] && <p className="text-red-500 text-sm">{errors[id].message}</p>}
       </div>
    )
 }
 
-const TextAreaComponent = ({ register, errors, label, id, subLabel }: InputComponentProps) => {
+const TextAreaComponent = ({ register, errors, label, id, subLabel, placeholder }: InputComponentProps) => {
    return (
       <div className="grid gap-2">
          <Label htmlFor={id}>
             {label}
          </Label>
-         <Textarea {...register(id)} placeholder="List amenities (e.g. pool, garage, garden)" name={id} id={id} className="textarea" />
+         <Textarea {...register(id)} placeholder={placeholder} name={id} id={id} className="textarea" />
          {!errors[id] && <p className="text-xs text-muted-foreground">
             {subLabel}
          </p>}
@@ -169,6 +170,7 @@ export const createListingFormShape = {
             id: "amenities",
             label: "Amenities",
             subLabel: "Separate amenities with commas",
+            placeholder: "List amenities (e.g. pool, garage, garden)",
             type: "text",
             required: true,
             component: TextAreaComponent,
