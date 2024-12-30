@@ -24,8 +24,35 @@ model User {
   hashedPassword     String?
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
+  properties         Property[]
+  account            Account?
+}
 
-  account Account?
+model Property {
+  id          String         @id @default(cuid())
+  title       String
+  slug        String
+  description String
+  price       Float
+  type        String
+  state       String
+  status      PropertyStatus
+  location    String
+  amenities   String
+  userId      String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  images      Image[]
+  user        User           @relation(fields: [userId], references: [id])
+}
+
+model Image {
+  id         String   @id @default(cuid())
+  url        String
+  key        String
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
 }
 
 model Account {
@@ -61,4 +88,9 @@ enum AccountType {
   estate_agent
   property_owner
   property_developer
+}
+
+enum PropertyStatus {
+  draft
+  published
 }

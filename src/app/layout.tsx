@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/sonner"
 import Navbar from "@/components/navbar";
 import { currentUser } from "@/lib/db/queries/user";
 import { SessionProvider } from "next-auth/react"
-import { auth } from "@/auth";
 
 // fonts: Mulish, Open_Sans, Outfit,
 

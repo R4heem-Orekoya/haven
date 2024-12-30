@@ -37,7 +37,7 @@ export const propertySchema = z.object({
          message: "Amenities must be separated by commas.",
       }
    ),
-   images: z.array(z.string()).min(1, "At least one image is required").max(8, "Maximum 8 images allowed"),
+   images: z.array(z.instanceof(File)).min(1, "At least one image is required").max(8, "Maximum 8 images allowed"),
    status: z.enum(["draft", "published"])
 })
    .superRefine((data, ctx) => {

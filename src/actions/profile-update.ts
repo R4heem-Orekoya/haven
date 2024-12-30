@@ -12,7 +12,7 @@ export const updateProfileAction = async (data: TUpdateProfileSchema) => {
    const signedInUser = await currentUser()
    
    if(!signedInUser || !signedInUser.email) {
-      return { error: "Unauthorised" }
+      return { error: "Unauthorized" }
    }
    
    const validatedData = updateProfileSchema.safeParse(data)
@@ -46,7 +46,7 @@ export const updatePasswordAction = async (data: TChangePasswordSchema) => {
    const signedInUser = await currentUser()
    
    if(!signedInUser || !signedInUser.email) {
-      return { error: "Unauthorised" }
+      return { error: "Unauthorized" }
    }
    
    const validatedData = changePasswordSchema.safeParse(data)
@@ -88,7 +88,7 @@ export const updateAccountTypeAction = async ({ accountType, accountVisibility }
    const signedInUser = await currentUser()
    
    if(!signedInUser || !signedInUser.email) {
-      return { error: "Unauthorised" }
+      return { error: "Unauthorized" }
    }
    
    await db.user.update({

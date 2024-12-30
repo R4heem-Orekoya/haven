@@ -5,6 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const wait = async (duration: number) => {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => resolve(), duration)
+  })
+}
+
+export const sluggify = (text: string) => 
+  text.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
+
 export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   return keys.reduce((result, key) => {
     if (key in obj) {

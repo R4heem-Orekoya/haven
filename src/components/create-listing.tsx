@@ -1,25 +1,27 @@
 "use client"
 
-import { ArrowLeft, Bath, Bed, ImagePlus, MapPin, Ruler, SquarePen, X } from "lucide-react"
+import { ArrowLeft, Bath, Bed, ImagePlus, Loader2, MapPin, Ruler, SquarePen, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { propertySchema, TPropertySchema } from "@/lib/validators/property-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { states } from "@/consts/states"
-import { formatPrice } from "@/lib/utils"
+import { formatPrice, wait } from "@/lib/utils"
 import Image from "next/image"
 import PlaceHolderImage from "../../public/placeholder.svg"
-
+import { createNewPropertyListing } from "@/actions/property"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export const CreateListing = () => {
-   const [images, setImages] = useState<string[]>([])
+   const [images, setImages] = useState<File[]>([])
+   const [isSubmitting, setIsSubmitting] = useState(false)
 
    const form = useForm<TPropertySchema>({
       resolver: zodResolver(propertySchema),
@@ -27,12 +29,12 @@ export const CreateListing = () => {
          status: "draft",
       }
    })
-   
+
    const formState = form.watch()
    const propertyType = form.watch("type")
    const isResidential = ["house", "apartment"].includes(propertyType)
 
-   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files
       if (!files) return
 
@@ -41,7 +43,7 @@ export const CreateListing = () => {
          return
       }
 
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file))
+      const newImages = Array.from(files).map(file => file)
       setImages(prev => [...prev, ...newImages])
       form.setValue("images", [...images, ...newImages])
    }
@@ -51,12 +53,35 @@ export const CreateListing = () => {
       form.setValue("images", images.filter((_, i) => i !== index))
    }
 
-   useEffect(() => {
-      console.log(form.formState.errors);
-   }, [form.formState.errors])
+   const router = useRouter()
 
-   const onSubmit = (data: TPropertySchema) => {
-      console.log(data)
+   const onSubmit = async (data: TPropertySchema) => {
+      const formData = {
+         ...data,
+         price: String(data.price),
+         beds: String(data.beds),
+         baths: String(data.baths),
+         sqft: String(data.sqft)
+      }
+      console.log(formData)
+      setIsSubmitting(true)
+      //@ts-expect-error
+      createNewPropertyListing(formData)
+         .then((callback) => {
+            if ('success' in callback) {
+               toast.success(callback.success)
+               router.push("/properties")
+            }
+            if ('error' in callback) {
+               toast.error(callback.error)
+               console.log(callback);
+            }
+         })
+         .catch((error) => {
+            console.log(error);
+            toast.error("Something went wrong. Try again!")
+         })
+         .finally(() => setIsSubmitting(false))
    }
 
    return (
@@ -83,6 +108,7 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="description">Description</Label>
                         <Textarea
+                           className="min-h-[80px] max-h-[250px]"
                            id="description"
                            {...form.register("description")}
                         />
@@ -91,7 +117,7 @@ export const CreateListing = () => {
                         </p>
                      </div>
 
-                     <div className="grid md:grid-cols-2 gap-4">  
+                     <div className="grid md:grid-cols-2 gap-4">
                         <div>
                            <Label htmlFor="price">Price</Label>
                            <Input
@@ -103,7 +129,7 @@ export const CreateListing = () => {
                               {form.formState.errors.price?.message}
                            </p>
                         </div>
-                        
+
                         <div>
                            <Label htmlFor="price">Listing Type</Label>
                            <Select
@@ -166,7 +192,6 @@ export const CreateListing = () => {
                         <Input
                            id="address"
                            {...form.register("location.address")}
-                        // error={form.formState.errors.location?.address?.message}
                         />
                         <p className="mt-2 text-xs text-destructive">
                            {form.formState.errors.location?.address?.message}
@@ -243,6 +268,7 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="amenities">Amenities</Label>
                         <Textarea
+                           className="min-h-[80px] max-h-[250px]"
                            id="amenities"
                            {...form.register("amenities")}
                            placeholder="Enter amenities separated by commas (e.g. pool, garage, garden, fenced)"
@@ -261,7 +287,7 @@ export const CreateListing = () => {
                      {images.map((image, index) => (
                         <div key={index} className="relative aspect-square">
                            <img
-                              src={image}
+                              src={URL.createObjectURL(image)}
                               alt={`Property ${index + 1}`}
                               className="w-full h-full object-cover rounded-lg"
                            />
@@ -287,7 +313,7 @@ export const CreateListing = () => {
                                  className="hidden"
                                  accept="image/*"
                                  multiple
-                                 onChange={handleImageUpload}
+                                 onChange={handleImageSelect}
                               />
                            </label>
                         </div>
@@ -303,6 +329,7 @@ export const CreateListing = () => {
                {/* Form Actions */}
                <div className="flex justify-end gap-4">
                   <Button
+                     disabled={isSubmitting}
                      type="button"
                      variant="outline"
                      onClick={() => form.setValue("status", "draft")}
@@ -310,15 +337,17 @@ export const CreateListing = () => {
                      Save as Draft
                   </Button>
                   <Button
+                     disabled={isSubmitting}
                      type="submit"
-                     onClick={() => form.setValue("status", "published")}
+
                   >
                      Publish Listing
+                     {isSubmitting && <Loader2 className="w-4 h-4 animate-spin ml-1" />}
                   </Button>
                </div>
             </form>
-            
-            <Preview 
+
+            <Preview
                data={{
                   image: images[0],
                   listingType: formState.listingType,
@@ -359,15 +388,15 @@ const Header = () => {
 
 interface PreviewProps {
    data: {
-      image: string | undefined
+      image: File | undefined
       title: string | undefined
       listingType: "rent" | "sale" | "shortlet" | undefined
       location: string | undefined
       beds: number | undefined
       baths: number | undefined
       sqft: number | undefined
-      price: number | undefined 
-      type: "land" | "commercial" | "apartment" | "house" 
+      price: number | undefined
+      type: "land" | "commercial" | "apartment" | "house"
    }
 }
 
@@ -377,19 +406,29 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
       const suffix = listingType === "shortlet" ? "/night" : listingType === "rent" ? "/year" : "";
       return `${formatPrice(price, { notation: "standard" })}${suffix}`;
    };
-   
+
    return (
       <div className="w-[340px] sticky top-20 p-4 rounded-lg border border-border bg-white shadow-sm max-lg:hidden">
          <h3 className="font-semibold">Quick Preview</h3>
-         
+
          <div className="mt-4">
             <div className="relative aspect-[16/10] overflow-hidden rounded-md">
-               <Image
-                  src={image || PlaceHolderImage}
-                  alt={title || "Placeholder Image Alt text"}
-                  fill
-                  className="object-cover"
-               />
+               {image ? (
+                  <Image
+                     src={URL.createObjectURL(image) || PlaceHolderImage}
+                     alt={title || "Placeholder Image Alt text"}
+                     fill
+                     className="object-cover"
+                  />
+                  
+               ): (
+                  <Image
+                     src={PlaceHolderImage}
+                     alt={title || "Placeholder Image Alt text"}
+                     fill
+                     className="object-cover"
+                  />
+               )}
                <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-xs font-semibold rounded-full">
                   For {listingType || "-"}
                </div>
@@ -404,7 +443,7 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
                      <p className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Bed className="w-3 h-3" />
                         {beds || "-"}
-                     </p> 
+                     </p>
                      <div className="w-[1px] h-[10px] bg-zinc-200" />
                   </>
                )}
