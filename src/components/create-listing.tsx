@@ -24,10 +24,7 @@ export const CreateListing = () => {
    const [isSubmitting, setIsSubmitting] = useState(false)
 
    const form = useForm<TPropertySchema>({
-      resolver: zodResolver(propertySchema),
-      defaultValues: {
-         status: "draft",
-      }
+      resolver: zodResolver(propertySchema)
    })
 
    const formState = form.watch()
@@ -56,16 +53,28 @@ export const CreateListing = () => {
    const router = useRouter()
 
    const onSubmit = async (data: TPropertySchema) => {
-      const formData = {
-         ...data,
-         price: String(data.price),
-         beds: String(data.beds),
-         baths: String(data.baths),
-         sqft: String(data.sqft)
+      const formData = new FormData()
+      formData.append("title", data.title)
+      formData.append("description", data.description)
+      formData.append("price", String(data.price))
+      formData.append("listingType", data.listingType)
+      formData.append("type", data.type)
+      formData.append("address", data.address),
+      formData.append("state", data.state),
+      formData.append("city", data.city)
+      formData.append("amenities", data.amenities)
+      formData.append("sqft", String(data.sqft))
+      
+      if(isResidential) {
+         formData.append("baths", String(data.baths))
+         formData.append("beds", String(data.beds))
       }
-      console.log(formData)
+      
+      images.forEach((image, index) => {
+         formData.append(`images`, image, image.name)
+      })
+      
       setIsSubmitting(true)
-      //@ts-expect-error
       createNewPropertyListing(formData)
          .then((callback) => {
             if ('success' in callback) {
@@ -140,8 +149,8 @@ export const CreateListing = () => {
                                  <SelectValue placeholder="Select listing type" />
                               </SelectTrigger>
                               <SelectContent>
-                                 <SelectItem value="sale">Sale</SelectItem>
-                                 <SelectItem value="rent">Rent</SelectItem>
+                                 <SelectItem value="sale">For sale</SelectItem>
+                                 <SelectItem value="rent">For rent</SelectItem>
                                  <SelectItem value="shortlet">Shortlet</SelectItem>
                               </SelectContent>
                            </Select>
@@ -160,7 +169,7 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="state">State</Label>
                         <Select
-                           onValueChange={(value) => form.setValue("location.state", value)}
+                           onValueChange={(value) => form.setValue("state", value)}
                         >
                            <SelectTrigger>
                               <SelectValue placeholder="Select state" />
@@ -172,7 +181,7 @@ export const CreateListing = () => {
                            </SelectContent>
                         </Select>
                         <p className="mt-2 text-xs text-destructive">
-                           {form.formState.errors.location?.state?.message}
+                           {form.formState.errors?.state?.message}
                         </p>
                      </div>
 
@@ -180,10 +189,10 @@ export const CreateListing = () => {
                         <Label htmlFor="city">City</Label>
                         <Input
                            id="city"
-                           {...form.register("location.city")}
+                           {...form.register("city")}
                         />
                         <p className="mt-2 text-xs text-destructive">
-                           {form.formState.errors.location?.city?.message}
+                           {form.formState.errors?.city?.message}
                         </p>
                      </div>
 
@@ -191,10 +200,10 @@ export const CreateListing = () => {
                         <Label htmlFor="address">Address</Label>
                         <Input
                            id="address"
-                           {...form.register("location.address")}
+                           {...form.register("address")}
                         />
                         <p className="mt-2 text-xs text-destructive">
-                           {form.formState.errors.location?.address?.message}
+                           {form.formState.errors?.address?.message}
                         </p>
                      </div>
                   </div>
@@ -207,8 +216,15 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="type">Property Type</Label>
                         <Select
-                           //@ts-expect-error
-                           onValueChange={(value) => form.setValue("type", value)}
+                           
+                           onValueChange={(value) => {
+                              //@ts-expect-error
+                              form.setValue("type", value)
+                              if (value === "land" || value === "commercial") {
+                                 form.setValue("beds", undefined)
+                                 form.setValue("baths", undefined)
+                              }
+                           }}
                         >
                            <SelectTrigger>
                               <SelectValue placeholder="Select property type" />
@@ -332,7 +348,7 @@ export const CreateListing = () => {
                      disabled={isSubmitting}
                      type="button"
                      variant="outline"
-                     onClick={() => form.setValue("status", "draft")}
+                     onClick={() => {}}
                   >
                      Save as Draft
                   </Button>
@@ -351,7 +367,7 @@ export const CreateListing = () => {
                data={{
                   image: images[0],
                   listingType: formState.listingType,
-                  location: formState.location?.address,
+                  location: formState?.address,
                   price: formState.price,
                   sqft: formState.sqft,
                   title: formState.title,

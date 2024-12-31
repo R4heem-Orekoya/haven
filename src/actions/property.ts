@@ -4,20 +4,34 @@ import { db } from "@/lib/db"
 import { currentUser } from "@/lib/db/queries/user"
 import { utapi } from "@/lib/uploadthing/utils"
 import { sluggify } from "@/lib/utils"
-import { propertySchema, TPropertySchema } from "@/lib/validators/property-schema"
+import { propertySchema } from "@/lib/validators/property-schema"
 
-export const createNewPropertyListing = async (data: TPropertySchema) => {
+export const createNewPropertyListing = async (formData: FormData) => {
    try {
       const signedInUser = await currentUser()
 
       if (!signedInUser || !signedInUser.id) {
          return { error: "Unauthorized" }
       }
-
-      const validatedData = propertySchema.safeParse(data)
+      
+      const validatedData = propertySchema.safeParse({
+         title: formData.get("title"),
+         description: formData.get("description"),
+         price: formData.get("price"),
+         listingType: formData.get("listingType"),
+         type: formData.get("type"),
+         address: formData.get("address"),
+         state: formData.get("state"),
+         city: formData.get("city"),
+         amenities: formData.get("amenities"),
+         baths: formData.get("baths"),
+         beds: formData.get("beds"),
+         sqft: formData.get("sqft"),
+         images: formData.getAll("images")
+      })
 
       if (!validatedData.success) {
-         console.log(validatedData.error);
+         console.dir(validatedData.error, { depth: null });
          return { error: "Invalid input. Please check your data and try again." }
       }
 
@@ -35,8 +49,8 @@ export const createNewPropertyListing = async (data: TPropertySchema) => {
                price: propertyListingData.price,
                amenities: propertyListingData.amenities,
                type: propertyListingData.listingType,
-               location: propertyListingData.location.address,
-               state: propertyListingData.location.state,
+               location: propertyListingData.address,
+               state: propertyListingData.state,
                userId: signedInUser.id,
                status: "published"
             },
@@ -68,6 +82,9 @@ export const createNewPropertyListing = async (data: TPropertySchema) => {
          });
 
          return { success: "Property listing created successfully!" };
+      }, {
+         maxWait: 5000, // 5 seconds max wait to connect to prisma
+         timeout: 20000, // 20 seconds
       });
 
    } catch (error) {

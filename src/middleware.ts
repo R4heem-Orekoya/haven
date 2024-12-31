@@ -11,6 +11,9 @@ export default middleware((req) => {
    if(nextUrl.pathname === "/api/uploadthing") {
       return
    }
+   if(nextUrl.pathname === "/api/create-listing") {
+      return
+   }
    
    const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
    const isPublicRoute = publicRoutes.includes(nextUrl.pathname)

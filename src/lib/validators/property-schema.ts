@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const MAX_FILE_SIZE = 1 * 1024 * 1024
+
 export const propertySchema = z.object({
    title: z.string().min(5, "Title must be at least 5 characters"),
    description: z.string().min(20, "Description must be at least 20 characters"),
@@ -8,18 +10,18 @@ export const propertySchema = z.object({
       .transform((val) => Number(val))
       .pipe(z.number().positive("Price must be greater than 0")),
    listingType: z.enum(["rent", "sale", "shortlet"]),
-   location: z.object({
-      state: z.string().nonempty("State is required"),
-      city: z.string().nonempty("City is required"), //remove this later
-      address: z.string().nonempty("Address is required"),
-   }),
+   state: z.string().nonempty("State is required"),
+   city: z.string().nonempty("City is required"), //remove this later
+   address: z.string().nonempty("Address is required"),
    type: z.enum(["house", "apartment", "land", "commercial"]),
    beds: z.string()
       .optional()
+      .nullable()
       .transform((val) => (val ? Number(val) : undefined))
       .pipe(z.number().positive().optional()),
    baths: z.string()
       .optional()
+      .nullable()
       .transform((val) => (val ? Number(val) : undefined))
       .pipe(z.number().positive().optional()),
    sqft: z.string()
@@ -27,9 +29,9 @@ export const propertySchema = z.object({
       .transform((val) => Number(val))
       .pipe(z.number().positive("Square footage must be greater than 0")),
    amenities: z.string().refine((value) => {
-      if(value === "") return true
+      if (value === "") return true
       const words = value.split(",")
-      
+
       const isValid = words.every((word) => word.trim().length)
       return isValid;
    },
@@ -37,8 +39,17 @@ export const propertySchema = z.object({
          message: "Amenities must be separated by commas.",
       }
    ),
-   images: z.array(z.instanceof(File)).min(1, "At least one image is required").max(8, "Maximum 8 images allowed"),
-   status: z.enum(["draft", "published"])
+   images: z
+      .array(
+         z.instanceof(File).refine((file) => {
+            const isLessthanThreshold = file.size < MAX_FILE_SIZE
+            return isLessthanThreshold
+         },
+            { message: `Image Size must be less than ${MAX_FILE_SIZE / 1024 / 1024}MB` }
+         )
+      )
+      .min(1, "At least one image is required")
+      .max(8, "Maximum 8 images allowed"),
 })
    .superRefine((data, ctx) => {
       if (data.type === "apartment" || data.type === "house") {

@@ -15,5 +15,11 @@ app.get('/hello', (c) => {
    })
 })
 
+app.post("/create-listing", (c) => {
+   const formData = c.req.formData
+   
+   return c.json(formData)
+})
+
 export const GET = handle(app)
 export const POST = handle(app)
