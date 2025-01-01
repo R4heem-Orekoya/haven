@@ -14,9 +14,9 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 
 const tabs = [
-   { icon: Bookmark, label: "Saved Properties", value: "saved_properties", new: false, component: PropertyGrid },
-   { icon: House, label: "Property Listings", value: "property_listings", new: false, component: PropertyListing },
-   { icon: MessageCircleMore, label: "Messages", value: "messages", new: true, component: PropertyGrid },
+   { icon: Bookmark, label: "Saved Properties", value: "saved_properties", new: false, component: () => <p>Hello</p> },
+   { icon: House, label: "Property Listings", value: "property_listings", new: false, component: () => <p>Hello</p> },
+   { icon: MessageCircleMore, label: "Messages", value: "messages", new: true, component: () => <p>Hello</p> },
 ]
 
 interface DashboardTabProps {
@@ -68,7 +68,7 @@ export default function DashboardTab({ signedInUser }: DashboardTabProps) {
          {tabs.map((tab, index) => (
             <>
                <TabsContent value={tab.value} key={index} className="mt-6">
-                  <tab.component data={properties} />
+                  <tab.component />
                </TabsContent>
             </>
          ))}

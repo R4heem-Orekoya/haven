@@ -1,12 +1,12 @@
 import { formatPrice } from "@/lib/utils"
 import Image from "next/image"
 import { Bath, Bed, Edit, MapPin, MoreVertical, Ruler, Trash2 } from "lucide-react"
-import { property } from "@/types/property"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
+import { TProperty } from "@/types/property"
 
 interface PropertyCardProps {
-   property: property
+   property: TProperty
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
@@ -14,18 +14,18 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       <div className="col-span-1">
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
             <Image
-               src={property.image}
-               alt={property.name}
+               src={property.images[0].url}
+               alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
             />
-            <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-xs font-semibold rounded-full">
-               For {property.type}
+            <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-secondary-foreground text-xs font-semibold rounded-full">
+               For {property.category}
             </div>
          </div>
          <div className="space-y-1 mt-2">
             <p className="flex items-center gap-2 text-sm font-semibold"><MapPin className="w-4 h-4 text-muted-foreground" />{property.location}</p>
-            <h3 className="text-lg font-semibold tracking-normal">{property.name}</h3>
+            <h3 className="text-lg font-semibold tracking-normal">{property.title}</h3>
          </div>
          <div className="flex items-center gap-2 py-2">
             <p className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -54,20 +54,20 @@ export const DashboardPropertyCard = ({ property }: PropertyCardProps) => {
       <div className="col-span-1">
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
             <Image
-               src={property.image}
-               alt={property.name}
+               src={property.images[0].url}
+               alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
             />
             <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-xs font-semibold rounded-full">
-               For {property.type}
+               For {property.category}
             </div>
          </div>
          <div className="flex items-start justify-between">
             <div>
                <div className="space-y-1 mt-2">
                   <p className="flex items-center gap-2 text-sm font-semibold"><MapPin className="w-4 h-4 text-muted-foreground" />{property.location}</p>
-                  <h3 className="text-lg font-semibold tracking-normal">{property.name}</h3>
+                  <h3 className="text-lg font-semibold tracking-normal">{property.title}</h3>
                </div>
                <div className="flex items-center gap-2 py-2">
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">

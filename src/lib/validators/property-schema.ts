@@ -9,11 +9,11 @@ export const propertySchema = z.object({
       .nonempty("Price is required")
       .transform((val) => Number(val))
       .pipe(z.number().positive("Price must be greater than 0")),
-   listingType: z.enum(["rent", "sale", "shortlet"]),
+   propertyType: z.enum(["house", "apartment", "land", "commercial"]),
    state: z.string().nonempty("State is required"),
    city: z.string().nonempty("City is required"), //remove this later
    address: z.string().nonempty("Address is required"),
-   type: z.enum(["house", "apartment", "land", "commercial"]),
+   category: z.enum(["rent", "sale", "shortlet"]),
    beds: z.string()
       .optional()
       .nullable()
@@ -52,7 +52,7 @@ export const propertySchema = z.object({
       .max(8, "Maximum 8 images allowed"),
 })
    .superRefine((data, ctx) => {
-      if (data.type === "apartment" || data.type === "house") {
+      if (data.propertyType === "apartment" || data.propertyType === "house") {
          if (data.beds === undefined) {
             ctx.addIssue({
                code: "custom",

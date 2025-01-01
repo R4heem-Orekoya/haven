@@ -12,7 +12,7 @@ import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { states } from "@/consts/states"
-import { formatPrice, wait } from "@/lib/utils"
+import { formatPrice } from "@/lib/utils"
 import Image from "next/image"
 import PlaceHolderImage from "../../public/placeholder.svg"
 import { createNewPropertyListing } from "@/actions/property"
@@ -28,7 +28,7 @@ export const CreateListing = () => {
    })
 
    const formState = form.watch()
-   const propertyType = form.watch("type")
+   const propertyType = form.watch("propertyType")
    const isResidential = ["house", "apartment"].includes(propertyType)
 
    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +57,8 @@ export const CreateListing = () => {
       formData.append("title", data.title)
       formData.append("description", data.description)
       formData.append("price", String(data.price))
-      formData.append("listingType", data.listingType)
-      formData.append("type", data.type)
+      formData.append("propertyType", data.propertyType)
+      formData.append("category", data.category)
       formData.append("address", data.address),
       formData.append("state", data.state),
       formData.append("city", data.city)
@@ -143,7 +143,7 @@ export const CreateListing = () => {
                            <Label htmlFor="price">Listing Type</Label>
                            <Select
                               //@ts-expect-error
-                              onValueChange={(value) => form.setValue("listingType", value)}
+                              onValueChange={(value) => form.setValue("category", value)}
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Select listing type" />
@@ -155,7 +155,7 @@ export const CreateListing = () => {
                               </SelectContent>
                            </Select>
                            <p className="mt-2 text-xs text-destructive">
-                              {form.formState.errors.listingType?.message}
+                              {form.formState.errors.category?.message}
                            </p>
                         </div>
                      </div>
@@ -219,7 +219,7 @@ export const CreateListing = () => {
                            
                            onValueChange={(value) => {
                               //@ts-expect-error
-                              form.setValue("type", value)
+                              form.setValue("propertyType", value)
                               if (value === "land" || value === "commercial") {
                                  form.setValue("beds", undefined)
                                  form.setValue("baths", undefined)
@@ -237,7 +237,7 @@ export const CreateListing = () => {
                            </SelectContent>
                         </Select>
                         <p className="mt-2 text-xs text-destructive">
-                           {form.formState.errors.type?.message}
+                           {form.formState.errors.propertyType?.message}
                         </p>
                      </div>
 
@@ -366,14 +366,14 @@ export const CreateListing = () => {
             <Preview
                data={{
                   image: images[0],
-                  listingType: formState.listingType,
+                  category: formState.category,
                   location: formState?.address,
                   price: formState.price,
                   sqft: formState.sqft,
                   title: formState.title,
                   baths: formState.baths,
                   beds: formState.beds,
-                  type: formState.type
+                  propertyType: formState.propertyType
                }}
             />
          </section>
@@ -406,20 +406,20 @@ interface PreviewProps {
    data: {
       image: File | undefined
       title: string | undefined
-      listingType: "rent" | "sale" | "shortlet" | undefined
+      category: "rent" | "sale" | "shortlet" | undefined
       location: string | undefined
       beds: number | undefined
       baths: number | undefined
       sqft: number | undefined
       price: number | undefined
-      type: "land" | "commercial" | "apartment" | "house"
+      propertyType: "land" | "commercial" | "apartment" | "house"
    }
 }
 
-const Preview = ({ data: { image, listingType, location, price, sqft, title, baths, beds, type } }: PreviewProps) => {
-   const formatPriceWithSuffix = (price: number | undefined, listingType: string | undefined) => {
+const Preview = ({ data: { image, category, location, price, sqft, title, baths, beds, propertyType } }: PreviewProps) => {
+   const formatPriceWithSuffix = (price: number | undefined, category: string | undefined) => {
       if (!price) return "-";
-      const suffix = listingType === "shortlet" ? "/night" : listingType === "rent" ? "/year" : "";
+      const suffix = category === "shortlet" ? "/night" : category === "rent" ? "/year" : "";
       return `${formatPrice(price, { notation: "standard" })}${suffix}`;
    };
 
@@ -446,7 +446,7 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
                   />
                )}
                <div className="absolute top-4 left-4 py-1 px-2 bg-secondary text-xs font-semibold rounded-full">
-                  For {listingType || "-"}
+                  For {category || "-"}
                </div>
             </div>
             <div className="space-y-1 mt-2">
@@ -454,7 +454,7 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
                <h3 className="text-lg font-semibold tracking-normal">{title || "No Property Title"}</h3>
             </div>
             <div className="flex items-center gap-2 py-2">
-               {beds && type !== "land" && type !== "commercial" && (
+               {beds && propertyType !== "land" && propertyType !== "commercial" && (
                   <>
                      <p className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Bed className="w-3 h-3" />
@@ -463,7 +463,7 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
                      <div className="w-[1px] h-[10px] bg-zinc-200" />
                   </>
                )}
-               {baths && type !== "land" && type !== "commercial" && (
+               {baths && propertyType !== "land" && propertyType !== "commercial" && (
                   <>
                      <p className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Bath className="w-3 h-3 " />
@@ -478,7 +478,7 @@ const Preview = ({ data: { image, listingType, location, price, sqft, title, bat
                </p>
             </div>
             <p className="text-lg font-semibold tracking-normal opacity-80">
-               {formatPriceWithSuffix(price, listingType)}
+               {formatPriceWithSuffix(price, category)}
             </p>
          </div>
       </div>

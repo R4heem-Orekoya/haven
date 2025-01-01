@@ -29,21 +29,25 @@ model User {
 }
 
 model Property {
-  id          String         @id @default(cuid())
+  id          String           @id @default(cuid())
   title       String
   slug        String
   description String
   price       Float
-  type        String
+  type        PropertyType
+  category    PropertyCategory
   state       String
   status      PropertyStatus
   location    String
   amenities   String
+  beds        Int?
+  baths       Int?
+  sqft        Int
   userId      String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   images      Image[]
-  user        User           @relation(fields: [userId], references: [id])
+  user        User             @relation(fields: [userId], references: [id])
 }
 
 model Image {
@@ -88,6 +92,19 @@ enum AccountType {
   estate_agent
   property_owner
   property_developer
+}
+
+enum PropertyType {
+  land
+  house
+  apartment
+  commercial
+}
+
+enum PropertyCategory {
+  rent
+  sale
+  shortlet
 }
 
 enum PropertyStatus {

@@ -6,7 +6,7 @@ import { Button } from "./ui/button"
 import MobileNav from "./MobileNav"
 import ProfilePicture from "./profile-picture"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Bookmark, LayoutDashboard, LogOut } from "lucide-react"
+import { Bookmark, LayoutDashboard, LogOut, UserRoundPen } from "lucide-react"
 import { useCallback } from "react"
 import { logoutAction } from "@/actions/auth"
 import { toast } from "sonner"
@@ -38,7 +38,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
             <MobileNav />
             <div className="hidden md:flex items-center gap-10">
                <nav className="flex items-center gap-6">
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary duration-300">Properties</Link>
+                  <Link href="/properties" className="text-sm text-muted-foreground hover:text-primary duration-300">Properties</Link>
                   <Link href="#" className="text-sm text-muted-foreground hover:text-primary duration-300">Estate Agents</Link>
                   <Link href="#" className="text-sm text-muted-foreground hover:text-primary duration-300">Property Developers</Link>
                </nav>
@@ -46,7 +46,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                <div className="flex space-x-4">
                   {signedInuser ? (
                      <DropdownMenu>
-                        <DropdownMenuTrigger>
+                        <DropdownMenuTrigger className="rounded-full focus:outline-offset-4">
                            <ProfilePicture image={signedInuser.image!} name={signedInuser.name!} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[250px] mt-3 border z-[999]">
@@ -54,15 +54,21 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                            <DropdownMenuSeparator />
                            <DropdownMenuItem asChild className="cursor-pointer">
                               <Link href="/dashboard">
-                                 <LayoutDashboard className="text-muted-foreground"/>
+                                 <LayoutDashboard strokeWidth={1.7} className="text-muted-foreground"/>
                                  Dashboard
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild className="cursor-pointer">
-                              {/* <Link href="/dashboard">
-                                 <Bookmark className="text-muted-foreground"/>
+                              <Link href="/dashboard?tab=property_listings">
+                                 <UserRoundPen strokeWidth={1.7} className="text-muted-foreground"/>
+                                 Edit Profile
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild className="cursor-pointer">
+                              <Link href="/dashboard?tab=property_listings">
+                                 <Bookmark strokeWidth={1.7} className="text-muted-foreground"/>
                                  Saved Properties
-                              </Link> */}
+                              </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild >
                               <button onClick={handleLogout} className="text-red-500 hover:text-red-500 cursor-pointer w-full">

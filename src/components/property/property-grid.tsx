@@ -1,16 +1,16 @@
 import { cn } from "@/lib/utils"
-import { property } from "@/types/property"
 import { DashboardPropertyCard, PropertyCard } from "./property-card"
+import { TProperty } from "@/types/property"
 
 interface PropertyGridProps {
-   data: property[],
+   data: TProperty[],
    className?: string
 }
 
 export const PropertyGrid = ({ className, data: properties }: PropertyGridProps) => {
    return (
       <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", className)}>
-         {properties.map((property) => (
+         {[...properties, ...properties, ...properties, ...properties].map((property) => (
             <PropertyCard key={property.id} property={property} />
          ))}
       </div>

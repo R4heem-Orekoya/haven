@@ -5,6 +5,8 @@ import { currentUser } from "@/lib/db/queries/user"
 import { utapi } from "@/lib/uploadthing/utils"
 import { sluggify } from "@/lib/utils"
 import { propertySchema } from "@/lib/validators/property-schema"
+import { TProperty } from "@/types/property"
+import { Property } from "@prisma/client"
 
 export const createNewPropertyListing = async (formData: FormData) => {
    try {
@@ -18,8 +20,8 @@ export const createNewPropertyListing = async (formData: FormData) => {
          title: formData.get("title"),
          description: formData.get("description"),
          price: formData.get("price"),
-         listingType: formData.get("listingType"),
-         type: formData.get("type"),
+         category: formData.get("category"),
+         propertyType: formData.get("propertyType"),
          address: formData.get("address"),
          state: formData.get("state"),
          city: formData.get("city"),
@@ -41,20 +43,45 @@ export const createNewPropertyListing = async (formData: FormData) => {
       // Use a transaction for database operations
       return await db.$transaction(async (tx) => {
          // Create property
-         const property = await tx.property.create({
-            data: {
-               title: propertyListingData.title,
-               description: propertyListingData.description,
-               slug: sluggify(propertyListingData.title),
-               price: propertyListingData.price,
-               amenities: propertyListingData.amenities,
-               type: propertyListingData.listingType,
-               location: propertyListingData.address,
-               state: propertyListingData.state,
-               userId: signedInUser.id,
-               status: "published"
-            },
-         });
+         let property: Property
+         
+         if(propertyListingData.propertyType === "house" || propertyListingData.propertyType === "apartment") {
+            property = await tx.property.create({
+               data: {
+                  title: propertyListingData.title,
+                  description: propertyListingData.description,
+                  slug: sluggify(propertyListingData.title),
+                  price: propertyListingData.price,
+                  amenities: propertyListingData.amenities,
+                  type: propertyListingData.propertyType,
+                  category: propertyListingData.category,
+                  location: propertyListingData.address,
+                  beds: propertyListingData.beds,
+                  baths: propertyListingData.baths,
+                  sqft: propertyListingData.sqft,
+                  state: propertyListingData.state,
+                  userId: signedInUser.id,
+                  status: "published"
+               },
+            })
+         }else {
+            property = await tx.property.create({
+               data: {
+                  title: propertyListingData.title,
+                  description: propertyListingData.description,
+                  slug: sluggify(propertyListingData.title),
+                  price: propertyListingData.price,
+                  amenities: propertyListingData.amenities,
+                  type: propertyListingData.propertyType,
+                  category: propertyListingData.category,
+                  location: propertyListingData.address,
+                  sqft: propertyListingData.sqft,
+                  state: propertyListingData.state,
+                  userId: signedInUser.id,
+                  status: "published"
+               },
+            })
+         }
 
          // Upload images
          const uploadedImages = await Promise.all(

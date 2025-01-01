@@ -1,13 +1,5 @@
-export type propertyType = "sale" | "rent" | "shortlet"
+import { Image, Property } from "@prisma/client"
 
-export type property = {
-   id: number,
-   name: string,
-   price: number,
-   location: string,
-   image: string,
-   beds: number,
-   baths: number,
-   sqft: number,
-   type: propertyType
-}
+export type TPropertyType = "sale" | "rent" | "shortlet"
+
+export type TProperty = Property & { images: Image[] }
