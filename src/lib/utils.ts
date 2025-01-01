@@ -31,13 +31,20 @@ export function formatPrice(price: number | string, options: {
   const { currency = 'NGN', notation = 'compact' } = options
 
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price
-
-  return new Intl.NumberFormat('en-US', {
+  
+  const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
     notation,
+    currencySign: "standard",
     maximumFractionDigits: 0
   }).format(numericPrice)
+  
+  if (currency === 'NGN') {
+    return formatted.replace('NGN', '₦')
+  }
+
+  return formatted
 }
 
 export const getRandomColor = () => {

@@ -4,6 +4,7 @@ import { Bath, Bed, Edit, MapPin, MoreVertical, Ruler, Trash2 } from "lucide-rea
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { TProperty } from "@/types/property"
+import Link from "next/link"
 
 interface PropertyCardProps {
    property: TProperty
@@ -11,7 +12,7 @@ interface PropertyCardProps {
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
    return (
-      <div className="col-span-1">
+      <Link href={`/properties/${property.slug}`} className="col-span-1">
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
             <Image
                src={property.images[0].url}
@@ -28,23 +29,31 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <h3 className="text-lg font-semibold tracking-normal">{property.title}</h3>
          </div>
          <div className="flex items-center gap-2 py-2">
-            <p className="flex items-center gap-1 text-sm text-muted-foreground">
-               <Bed className="w-3 h-3" />
-               {property.beds}
-            </p>
-            <div className="w-[1px] h-[10px] bg-zinc-200" />
-            <p className="flex items-center gap-1 text-sm text-muted-foreground">
-               <Bath className="w-3 h-3 " />
-               {property.baths}
-            </p>
-            <div className="w-[1px] h-[10px] bg-zinc-200" />
+            {property.beds && (
+               <>
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                     <Bed className="w-3 h-3" />
+                     {property.beds}
+                  </p>
+                  <div className="w-[1px] h-[10px] bg-zinc-200" />
+               </>
+            )}
+            {property.baths && (
+               <>
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                     <Bath className="w-3 h-3 " />
+                     {property.baths}
+                  </p>
+                  <div className="w-[1px] h-[10px] bg-zinc-200" />
+               </>
+            )}
             <p className="flex items-center gap-1 text-sm text-muted-foreground">
                <Ruler className="w-3 h-3" />
                {property.sqft.toLocaleString()} sq ft
             </p>
          </div>
          <p className="text-lg font-semibold tracking-normal opacity-80">{formatPrice(property.price, { notation: "standard" })}</p>
-      </div>
+      </Link>
    )
 }
 

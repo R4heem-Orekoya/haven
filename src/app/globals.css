@@ -8,6 +8,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .background {
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://assets-global.website-files.com/6409fd61974d392703031806/646650f050bcf38892975d40_MYAH_Website_Design_Images-01.jpg");
   background-size: cover;

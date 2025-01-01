@@ -59,7 +59,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild className="cursor-pointer">
-                              <Link href="/dashboard?tab=property_listings">
+                              <Link href="/dashboard/account/profile">
                                  <UserRoundPen strokeWidth={1.7} className="text-muted-foreground"/>
                                  Edit Profile
                               </Link>
