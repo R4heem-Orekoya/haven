@@ -23,6 +23,10 @@ html {
   max-height: 250px;
 }
 
+.lined-div {
+  @apply before:absolute before:w-[1px] before:h-[100vh] before:bg-border before:top-0 before:-left-[1px] after:absolute after:w-[100vw] after:h-[1px] after:bg-border after:-top-[1px] after:left-0
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

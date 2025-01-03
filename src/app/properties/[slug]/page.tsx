@@ -35,9 +35,6 @@ const Page = async ({ params }: Props) => {
                property={property} 
                params={params}
             />
-
-            <div className="col-span-1 p-4 bg-yellow-300 rounded-lg">
-            </div>
          </div>
       </main>
    )
