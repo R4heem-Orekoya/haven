@@ -47,6 +47,10 @@ export function formatPrice(price: number | string, options: {
   return formatted
 }
 
+export const capitalizeFirstLetter = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1, str.length).toLowerCase()
+}
+
 export const getRandomColor = () => {
   const colors = [
     '#FF5733', // Bright Orange/Red-Orange
