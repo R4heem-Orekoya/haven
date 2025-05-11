@@ -3,6 +3,7 @@ import { PropertyGrid } from "@/components/property/property-grid"
 import PropertyPagination from "@/components/property/property-pagination"
 import { db } from "@/lib/db"
 import { PropertyCategory, PropertyType } from '@prisma/client'
+import { Suspense } from "react"
 
 interface Props {
    searchParams?: { [key: string]: string | string[] | undefined }
@@ -47,7 +48,9 @@ const Page = async ({ searchParams }: Props) => {
 
    return (
       <main className="container mx-auto px-4 md:px-6 lg:px-8">
-         <PropertyFilter />
+         <Suspense fallback={null}>
+            <PropertyFilter />  
+         </Suspense>
          <div className="mt-4 min-h-[calc(100vh-56px)]">
             {properties.length ? (
                <PropertyGrid data={properties} />

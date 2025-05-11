@@ -42,7 +42,7 @@ const SignInForm = () => {
    
    return (
       <main className="container mx-auto px-4 md:px-6 lg:px-8 min-h-[calc(100vh-4rem)] grid place-items-center">
-         <div className="w-full max-w-[380px] py-8">
+         <div className="w-full max-w-[350px] py-8">
             <div className="text-center">
                <h1 className="text-2xl font-semibold">Login to your Haven Account</h1>
                <p className="text-sm text-muted-foreground">Don&apos;t have an account? <Link href="/register" className="text-primary font-medium hover:underline">Sign Up</Link></p>
@@ -56,7 +56,7 @@ const SignInForm = () => {
                </div>
                <div className="grid gap-2">
                   <Label>Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" className="text-2xl" {...register("password")} />
+                  <Input type="password" {...register("password")} />
                   {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                </div>
 

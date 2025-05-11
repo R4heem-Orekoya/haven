@@ -52,11 +52,12 @@ model Property {
 
 model Image {
   id         String   @id @default(cuid())
-  url        String
-  key        String
+  url        String?
+  key        String?
+  status     ImageStatus @default(processing)
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
+  createdAt  DateTime    @default(now())
 }
 
 model Account {
@@ -110,4 +111,10 @@ enum PropertyCategory {
 enum PropertyStatus {
   draft
   published
+}
+
+enum ImageStatus {
+  processing
+  uploaded
+  failed
 }

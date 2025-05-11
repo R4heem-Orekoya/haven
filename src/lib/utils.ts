@@ -11,8 +11,7 @@ export const wait = async (duration: number) => {
   })
 }
 
-export const sluggify = (text: string) => 
-  text.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
+export const sluggify = (text: string) => text.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
 
 export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   return keys.reduce((result, key) => {
@@ -47,6 +46,12 @@ export function formatPrice(price: number | string, options: {
   return formatted
 }
 
+export const formatPriceWithSuffix = (price: number | undefined, category: string | undefined, notation: Intl.NumberFormatOptions['notation'] = "compact") => {
+  if (!price) return "-";
+  const suffix = category === "shortlet" ? "/day" : category === "rent" ? "/year" : "";
+  return `${formatPrice(price, { notation })}${suffix}`;
+};
+
 export const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1, str.length).toLowerCase()
 }
@@ -68,4 +73,18 @@ export const getRandomColor = () => {
   ];
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
+}
+
+type Result<T> = {
+  data: T | null;
+  error: Error | null
+}
+
+export async function tryCatch<T>(promise: Promise<T>): Promise<Result<T>> {
+  try{
+    const data = await promise
+    return { data, error: null }
+  }catch(error) {
+    return { data: null, error: error as Error }
+  }
 }

@@ -12,6 +12,12 @@ const nextConfig = {
             hostname: "utfs.io",
             port: "",
          },
+         {
+            protocol: "https",
+            hostname: "pgokm0g6hg.ufs.sh",
+            pathname: "/f/*",
+            port: "",
+         },
       ],
    },
 };

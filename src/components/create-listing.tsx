@@ -12,7 +12,7 @@ import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { states } from "@/consts/states"
-import { formatPrice } from "@/lib/utils"
+import { formatPrice, formatPriceWithSuffix } from "@/lib/utils"
 import Image from "next/image"
 import PlaceHolderImage from "../../public/placeholder.svg"
 import { createNewPropertyListing } from "@/actions/property"
@@ -79,7 +79,7 @@ export const CreateListing = () => {
          .then((callback) => {
             if ('success' in callback) {
                toast.success(callback.success)
-               router.push("/properties")
+               router.push(`/properties/${callback.slug}`)
             }
             if ('error' in callback) {
                toast.error(callback.error)
@@ -417,12 +417,6 @@ interface PreviewProps {
 }
 
 const Preview = ({ data: { image, category, location, price, sqft, title, baths, beds, propertyType } }: PreviewProps) => {
-   const formatPriceWithSuffix = (price: number | undefined, category: string | undefined) => {
-      if (!price) return "-";
-      const suffix = category === "shortlet" ? "/night" : category === "rent" ? "/year" : "";
-      return `${formatPrice(price, { notation: "standard" })}${suffix}`;
-   };
-
    return (
       <div className="w-[340px] sticky top-20 p-4 rounded-lg border border-border bg-white shadow-sm max-lg:hidden">
          <h3 className="font-semibold">Quick Preview</h3>

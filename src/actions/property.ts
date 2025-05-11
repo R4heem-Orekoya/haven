@@ -2,20 +2,20 @@
 
 import { db } from "@/lib/db"
 import { currentUser } from "@/lib/db/queries/user"
-import { utapi } from "@/lib/uploadthing/utils"
 import { sluggify } from "@/lib/utils"
 import { propertySchema } from "@/lib/validators/property-schema"
-import { TProperty } from "@/types/property"
-import { Property } from "@prisma/client"
+import { uploadPropertyImages } from "@/trigger/upload-property-images"
+import { ImageStatus } from "@prisma/client"
+import { tasks } from "@trigger.dev/sdk/v3";
 
 export const createNewPropertyListing = async (formData: FormData) => {
    try {
       const signedInUser = await currentUser()
 
-      if (!signedInUser || !signedInUser.id) {
+      if (!signedInUser || !signedInUser.id || signedInUser.accountType === "individual") {
          return { error: "Unauthorized" }
       }
-      
+
       const validatedData = propertySchema.safeParse({
          title: formData.get("title"),
          description: formData.get("description"),
@@ -40,80 +40,56 @@ export const createNewPropertyListing = async (formData: FormData) => {
       const propertyListingData = validatedData.data
       const images = propertyListingData.images
 
-      // Use a transaction for database operations
-      return await db.$transaction(async (tx) => {
-         // Create property
-         let property: Property
-         
-         if(propertyListingData.propertyType === "house" || propertyListingData.propertyType === "apartment") {
-            property = await tx.property.create({
-               data: {
-                  title: propertyListingData.title,
-                  description: propertyListingData.description,
-                  slug: sluggify(propertyListingData.title),
-                  price: propertyListingData.price,
-                  amenities: propertyListingData.amenities,
-                  type: propertyListingData.propertyType,
-                  category: propertyListingData.category,
-                  location: propertyListingData.address,
-                  beds: propertyListingData.beds,
-                  baths: propertyListingData.baths,
-                  sqft: propertyListingData.sqft,
-                  state: propertyListingData.state,
-                  userId: signedInUser.id,
-                  status: "published"
-               },
-            })
-         }else {
-            property = await tx.property.create({
-               data: {
-                  title: propertyListingData.title,
-                  description: propertyListingData.description,
-                  slug: sluggify(propertyListingData.title),
-                  price: propertyListingData.price,
-                  amenities: propertyListingData.amenities,
-                  type: propertyListingData.propertyType,
-                  category: propertyListingData.category,
-                  location: propertyListingData.address,
-                  sqft: propertyListingData.sqft,
-                  state: propertyListingData.state,
-                  userId: signedInUser.id,
-                  status: "published"
-               },
-            })
-         }
+      const imagePayloads = await Promise.all(
+         images.map(async (file) => {
+            const buffer = await file.arrayBuffer();
+            return {
+               name: file.name,
+               type: file.type,
+               content: Buffer.from(buffer).toString("base64"),
+            };
+         })
+      )
 
-         // Upload images
-         const uploadedImages = await Promise.all(
-            images.map(async (image) => {
-               try {
-                  const result = await utapi.uploadFiles(image);
-                  if (!result.data?.url || !result.data?.key) {
-                     throw new Error('Image upload failed');
-                  }
-                  return {
-                     key: result.data.key,
-                     url: result.data.url,
-                     propertyId: property.id
-                  };
-               } catch (error) {
-                  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-                  throw new Error(`Failed to upload image: ${errorMessage}`);
-               }
-            })
-         );
+      const { property } = await db.$transaction(async (tx) => {
+         let property = await tx.property.create({
+            data: {
+               title: propertyListingData.title,
+               description: propertyListingData.description,
+               slug: sluggify(propertyListingData.title),
+               price: propertyListingData.price,
+               amenities: propertyListingData.amenities,
+               type: propertyListingData.propertyType,
+               category: propertyListingData.category,
+               location: propertyListingData.address,
+               beds: propertyListingData.beds ?? null,
+               baths: propertyListingData.baths ?? null,
+               sqft: propertyListingData.sqft,
+               state: propertyListingData.state,
+               userId: signedInUser.id,
+               status: "published"
+            },
+         })
 
-         // Create image records
+         const imageRecords = images.map(() => ({
+            propertyId: property.id,
+            status: "processing" as ImageStatus,
+         }));
+
          await tx.image.createMany({
-            data: uploadedImages,
+            data: imageRecords,
+            skipDuplicates: true,
          });
+         
+         return { property };
+      })
 
-         return { success: "Property listing created successfully!" };
-      }, {
-         maxWait: 5000, // 5 seconds max wait to connect to prisma
-         timeout: 20000, // 20 seconds
+      await tasks.trigger<typeof uploadPropertyImages>("upload_property_images", {
+         propertyId: property.id,
+         images: imagePayloads,
       });
 
+      return { success: "Property created. Uploading images in background...", slug: property.slug }
    } catch (error) {
       console.error('Failed to create property listing:', error);
       return {

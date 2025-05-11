@@ -55,7 +55,7 @@ const SignUpForm = () => {
    }
    return (
       <main className="container mx-auto px-4 md:px-6 lg:px-8 min-h-[calc(100vh-4rem)] grid place-items-center">
-         <div className="w-full max-w-[380px] py-8">
+         <div className="w-full max-w-[350px] py-8">
             <div className="text-center">
                <h1 className="text-2xl font-semibold">Welcome to Haven</h1>
                <p className="text-sm text-muted-foreground">Already have an account? <Link href="/sign-in" className="text-primary font-medium hover:underline">Sign In</Link></p>
@@ -74,12 +74,12 @@ const SignUpForm = () => {
                </div>
                <div className="grid gap-2">
                   <Label>Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" className="text-2xl" {...register("password")} />
+                  <Input type="password" {...register("password")} />
                   {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                </div>
                <div className="grid gap-2">
                   <Label>Confirm Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" className="text-2xl" {...register("confirmPassword")} />
+                  <Input type="password" {...register("confirmPassword")} />
                   {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
                </div>
                <div className="grid gap-2">
@@ -104,9 +104,11 @@ const SignUpForm = () => {
                      ))}
                   </RadioGroup>
                </div>
-
-               <AuthError message={error} />
-               <AuthSuccess message={success} />
+               
+               <div className="max-w-[350px] overflow-hidden">
+                  <AuthError message={error} />
+                  <AuthSuccess message={success} />
+               </div>
 
                <Button disabled={isSubmitting}>
                   Submit

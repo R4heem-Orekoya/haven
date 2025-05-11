@@ -12,11 +12,7 @@ export const getUserByEmail = async (email: string) => {
       return user
    } catch(err) {
       return null
-   }  
-}
-
-async function user() {
-   const user = await getUserByEmail("tundeorekoya1@gmail.com")
+   }
 }
 
 export const getUserById = async (id: string) => {
@@ -30,7 +26,7 @@ export const getUserById = async (id: string) => {
       return user
    } catch(err) {
       return null
-   }  
+   }
 }
 
 export const getUsers = async () => {

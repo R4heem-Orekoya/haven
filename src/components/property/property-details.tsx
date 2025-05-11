@@ -1,6 +1,6 @@
 import { Property } from "@prisma/client"
 import ShareToolTip from "./share-tooltip"
-import { capitalizeFirstLetter, formatPrice } from "@/lib/utils"
+import { capitalizeFirstLetter, formatPrice, formatPriceWithSuffix } from "@/lib/utils"
 import { Banknote, Bath, Bed, Building, Calendar, DollarSign, Home, MapPinned, Square } from "lucide-react"
 import { Fragment } from "react"
 
@@ -39,7 +39,7 @@ const PropertyDetails = ({ property, params }: PropertyCarouselProps) => {
 
          <div className="w-full">
             <h2 className="text-lg md:text-xl font-semibold text-zinc-800 mb-3">Overview</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 bg-zinc-50 border rounded-xl overflow-hidden">
+            <div className="grid grid-cols-2 lg:grid-cols-3 bg-zinc-50 border rounded-xl overflow-hidden">
                {property.baths && (
                   <div className="lined-div relative lined-div p-3 sm:p-4 flex items-center gap-2">
                      <Bed strokeWidth={1.5} className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-muted-foreground" />
@@ -58,7 +58,7 @@ const PropertyDetails = ({ property, params }: PropertyCarouselProps) => {
                </div>
                <div className="relative lined-div p-3 sm:p-4 flex items-center gap-2">
                   <Banknote strokeWidth={1.5} className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-muted-foreground" />
-                  <p className="text-sm sm:text-base xl:text-lg font-semibold">{formatPrice(property.price)}</p>
+                  <p className="text-sm sm:text-base xl:text-lg font-semibold">{formatPriceWithSuffix(property.price, property.category, "compact")}</p>
                </div>
                <div className="relative lined-div p-3 sm:p-4 flex items-center gap-2">
                   <MapPinned strokeWidth={1.5} className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-muted-foreground" />
@@ -102,7 +102,7 @@ const PropertyDetails = ({ property, params }: PropertyCarouselProps) => {
                </div>
                <div className="relative lined-div p-3 sm:p-4 flex justify-between gap-4 items-center">
                   <p className="text-zinc-700 font-semibold">Price</p>
-                  <p className="text-muted-foreground">{formatPrice(property.price, { notation: "standard" })}</p>
+                  <p className="text-muted-foreground">{formatPriceWithSuffix(property.price, property.category, "standard")}</p>
                </div>
                <div className="relative lined-div p-3 sm:p-4 flex justify-between gap-4 items-center">
                   <p className="text-zinc-700 font-semibold">Property Type</p>
