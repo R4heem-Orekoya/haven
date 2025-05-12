@@ -34,7 +34,7 @@ const Page = async ({ searchParams }: Props) => {
       where: {
          status: "published",
          ...(filterConditions.length > 0 && {
-            OR: filterConditions
+            AND: filterConditions
          })
       },
       include: {

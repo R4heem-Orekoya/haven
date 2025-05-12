@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider"
 import { propertyTypes } from "@/consts/property-types"
 import { states } from "@/consts/states"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Button } from "../ui/button"
 
 const PropertyFilter = () => {
    const searchParams = useSearchParams()
@@ -75,25 +76,18 @@ const PropertyFilter = () => {
                </SelectContent>
             </Select>
          </div>
-         {/* <div className="grid gap-2">
-               <div className="flex items-center justify-between gap-2">
-                  <Label className="leading-6">Price Range</Label>
-                  <output className="text-sm font-medium tabular-nums">
-                     {value[0]} - {value[1]}
-                  </output>
-               </div>
-               <Slider value={value} onValueChange={setValue} />
-            </div> */}
+         <div className="flex items-end">
+            <Button 
+               onClick={() => {
+                  router.push("/properties")
+               }}
+               className="w-full"
+            >
+               Reset Filter
+            </Button>
+         </div>
       </div>
    )
 }
 
 export default PropertyFilter
-
-//             type
-//             state
-//             price
-//             category
-               
-//             if type = house/ apartment
-//             beds and baths

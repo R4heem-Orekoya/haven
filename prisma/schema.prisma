@@ -25,6 +25,7 @@ model User {
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   properties         Property[]
+  favoriteProperties Property[] @relation("UserFavorites")
   account            Account?
 }
 
@@ -48,6 +49,7 @@ model Property {
   updatedAt   DateTime         @updatedAt
   images      Image[]
   user        User             @relation(fields: [userId], references: [id])
+  favoredByUsers User[] @relation("UserFavorites")
 }
 
 model Image {

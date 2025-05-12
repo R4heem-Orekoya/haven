@@ -48,7 +48,7 @@ export const propertySchema = z.object({
             { message: `Image Size must be less than ${MAX_FILE_SIZE / 1024 / 1024}MB` }
          )
       )
-      .min(1, "At least one image is required")
+      .min(5, "At least five images are required")
       .max(8, "Maximum 8 images allowed"),
 })
    .superRefine((data, ctx) => {

@@ -80,7 +80,7 @@ export const createNewPropertyListing = async (formData: FormData) => {
             data: imageRecords,
             skipDuplicates: true,
          });
-         
+
          return { property };
       })
 
@@ -94,6 +94,47 @@ export const createNewPropertyListing = async (formData: FormData) => {
       console.error('Failed to create property listing:', error);
       return {
          error: "Failed to create property listing. Please try again later."
+      };
+   }
+}
+
+export async function savePropertyAction(propertyId: string) {
+   try {
+      const signedInUser = await currentUser();
+
+      if (!signedInUser || !signedInUser.id) {
+         return { error: "Unauthorized" };
+      }
+
+      const userWithFavorites = await db.user.findUnique({
+         where: { id: signedInUser.id },
+         include: { favoriteProperties: true },
+      });
+
+      if (!userWithFavorites) return { error: "User not found." };
+
+      const alreadySaved = userWithFavorites.favoriteProperties.some(
+         (prop) => prop.id === propertyId
+      );
+
+      await db.user.update({
+         where: { id: signedInUser.id },
+         data: {
+            favoriteProperties: {
+               [alreadySaved ? "disconnect" : "connect"]: { id: propertyId },
+            },
+         },
+      });
+
+      return {
+         success: alreadySaved
+            ? "Property removed from saved listings."
+            : "Property saved successfully!",
+      };
+   } catch (error) {
+      console.error("Failed to save/unsave property:", error);
+      return {
+         error: "Something went wrong. Please try again.",
       };
    }
 }

@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button"
 import { currentUser } from "@/lib/db/queries/user"
 import { UserPen } from "lucide-react"
 import Link from "next/link"
+import { Suspense } from "react"
+import { redirect } from "next/navigation"
 
 const Page = async () => {
   const signedInUser = await currentUser()
+  
+  if(!signedInUser || !signedInUser.id) redirect("/login")
 
   return (
     <main className="container mx-auto px-4 md:px-6 lg:px-8 py-16">
@@ -15,8 +19,8 @@ const Page = async () => {
           <div className="flex items-center gap-6">
             <ProfilePicture
               size="2xl"
-              image={signedInUser?.image!}
-              name={signedInUser?.name!}
+              image={signedInUser.image as string}
+              name={signedInUser.name as string}
             />
             <div>
               <h2 className="text-xl md:text-2xl font-semibold">{signedInUser?.name}</h2>
@@ -38,7 +42,9 @@ const Page = async () => {
         </div>
 
         <div className="pt-4">
-          <DashboardTab signedInUser={signedInUser!} />
+          <Suspense>
+            <DashboardTab />
+          </Suspense>
         </div>
       </div>
     </main>

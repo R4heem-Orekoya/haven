@@ -15,7 +15,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       <Link href={`/properties/${property.slug}`} className="col-span-1">
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
             <Image
-               src={property.images[0].url}
+               src={property.images[0].url!}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -60,10 +60,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
 export const DashboardPropertyCard = ({ property }: PropertyCardProps) => {
    return (
-      <div className="col-span-1">
+      <Link href={`/${property.slug}`} className="col-span-1">
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
             <Image
-               src={property.images[0].url}
+               src={property.images[0].url!}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -117,6 +117,6 @@ export const DashboardPropertyCard = ({ property }: PropertyCardProps) => {
                </DropdownMenuContent>
             </DropdownMenu>
          </div>
-      </div>
+      </Link>
    )
 }
