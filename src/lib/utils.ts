@@ -88,3 +88,18 @@ export async function tryCatch<T>(promise: Promise<T>): Promise<Result<T>> {
     return { data: null, error: error as Error }
   }
 }
+
+export async function getProertyCount() {
+  const res = await fetch('http://localhost:3000/api/property/count', {
+    next: {
+      tags: ["get_proerty_count"]
+    }
+  })
+  
+  if(!res.ok) throw Error("Something went wrong! mmmm")
+    
+  const data = await res.json()
+  const count: number = data.count
+  
+  return count
+}

@@ -10,13 +10,12 @@ import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { DashboardPropertyGrid } from '../property/property-grid'
-import { TProperty } from '@/types/property'
+import { PropertyFavoriteCard } from '../property/property-cards'
+import { PropertyWithUser } from '@/types/property'
 
 interface Tab {
    signedInUser: User | null;
-   savedProperties: TProperty[];
-   userProperties: TProperty[]
+   savedProperties: PropertyWithUser[]
 }
 
 const tabs = [
@@ -25,7 +24,7 @@ const tabs = [
    { icon: MessageCircleMore, label: "Messages", value: "messages", new: true },
 ]
 
-export default function Tab({ signedInUser, savedProperties, userProperties }: Tab) {
+export default function Tab({ signedInUser, savedProperties }: Tab) {
    const router = useRouter()
    const searchParams = useSearchParams()
    const currentTab = searchParams.get('tab')
@@ -57,7 +56,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                   </TabsTrigger>
                ))}
                {signedInUser?.accountType !== "individual" && (
-                  <Button asChild className="ml-auto" size="sm">
+                  <Button asChild className="ml-auto rounded-3xl" size="sm">
                      <Link href="/dashboard/listing/create" className="flex items-center gap-2">
                         Create a new Listing
                         <Plus />
@@ -68,19 +67,18 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
             <ScrollBar orientation="horizontal" />
          </ScrollArea>
          <>
-            <TabsContent value='saved_properties'>
-               {savedProperties.length === 0 ? (
-                  <p>You havent saved any properties.</p>
-               ) : (
-                  <DashboardPropertyGrid data={savedProperties} />
-               )}
+            <TabsContent value='saved_properties' className='  mt-6'>
+               <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+                  {savedProperties.map((property) => (
+                     <PropertyFavoriteCard 
+                        key={property.id}
+                        property={property} 
+                     />
+                  ))}
+               </div>
             </TabsContent>
             <TabsContent value='property_listings'>
-               {userProperties.length === 0 ? (
-                  <p>You have no property listing.</p>
-               ) : (
-                  <DashboardPropertyGrid data={userProperties} />
-               )}
+               hello
             </TabsContent>
          </>
       </Tabs>

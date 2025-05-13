@@ -7,6 +7,7 @@ import { propertySchema } from "@/lib/validators/property-schema"
 import { uploadPropertyImages } from "@/trigger/upload-property-images"
 import { ImageStatus } from "@prisma/client"
 import { tasks } from "@trigger.dev/sdk/v3";
+import { revalidateTag } from "next/cache"
 
 export const createNewPropertyListing = async (formData: FormData) => {
    try {
@@ -88,6 +89,8 @@ export const createNewPropertyListing = async (formData: FormData) => {
          propertyId: property.id,
          images: imagePayloads,
       });
+      
+      revalidateTag("get_proerty_count")
 
       return { success: "Property created. Uploading images in background...", slug: property.slug }
    } catch (error) {
@@ -128,8 +131,8 @@ export async function savePropertyAction(propertyId: string) {
 
       return {
          success: alreadySaved
-            ? "Property removed from saved listings."
-            : "Property saved successfully!",
+            ? "Property removed from favorites!"
+            : "Property added to favorites!",
       };
    } catch (error) {
       console.error("Failed to save/unsave property:", error);

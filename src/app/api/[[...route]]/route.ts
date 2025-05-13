@@ -1,7 +1,8 @@
+import { db } from '@/lib/db'
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api')
 
@@ -15,10 +16,14 @@ app.get('/hello', (c) => {
    })
 })
 
-app.post("/create-listing", (c) => {
-   const formData = c.req.formData
-   
-   return c.json(formData)
+app.get("/property/count", async (c) => {
+   try {
+      const count = await db.property.count()
+
+      return c.json({ count })
+   } catch (error: any) {
+      return c.json({ message: error.message })
+   }
 })
 
 export const GET = handle(app)

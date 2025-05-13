@@ -36,7 +36,7 @@ const PropertyPagination = ({ currentPage, totalPages, paginationItemsToDisplay 
 
             {pages.map((page) => (
                <PaginationItem key={page}>
-                  <PaginationLink href={`/properties?page=${page}`} isActive={page === currentPage}>
+                  <PaginationLink className="w-8 h-8" href={`/properties?page=${page}`} isActive={page === currentPage}>
                      {page}
                   </PaginationLink>
                </PaginationItem>
@@ -50,6 +50,7 @@ const PropertyPagination = ({ currentPage, totalPages, paginationItemsToDisplay 
 
             <PaginationItem>
                <PaginationNext
+                  size="sm"
                   className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
                   href={currentPage === totalPages ? undefined : `/properties?page=${currentPage + 1}`}
                   aria-disabled={currentPage === totalPages ? true : undefined}

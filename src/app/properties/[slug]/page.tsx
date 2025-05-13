@@ -7,17 +7,18 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 
 interface Props {
-   params: {
+   params: Promise<{
       slug: string
-   }
+   }>
 }
 
 const Page = async ({ params }: Props) => {
    const signedInUser = await currentUser()
+   const slug = (await params).slug
    
    const property = await db.property.findFirst({
       where: {
-         slug: params.slug
+         slug: slug
       },
       include: {
          images: {

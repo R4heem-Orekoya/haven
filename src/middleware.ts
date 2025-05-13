@@ -11,7 +11,8 @@ export default middleware((req) => {
    if(nextUrl.pathname === "/api/uploadthing") {
       return
    }
-   if(nextUrl.pathname === "/api/create-listing") {
+   
+   if(nextUrl.pathname === "/api/property/count") {
       return
    }
    

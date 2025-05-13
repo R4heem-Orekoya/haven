@@ -10,11 +10,11 @@ import { redirect } from "next/navigation"
 const Page = async () => {
   const signedInUser = await currentUser()
   
-  if(!signedInUser || !signedInUser.id) redirect("/login")
+  if(!signedInUser || !signedInUser.id) redirect("/sign-in")
 
   return (
     <main className="container mx-auto px-4 md:px-6 lg:px-8 py-16">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-6">
             <ProfilePicture
@@ -33,7 +33,7 @@ const Page = async () => {
               </p>
             </div>
           </div>
-          <Button asChild variant="outline" size="sm" className="w-fit">
+          <Button asChild variant="outline" size="sm" className="w-fit rounded-3xl">
             <Link href="/dashboard/account/profile">
               <UserPen strokeWidth={1.6} className="text-muted-foreground"/>
               Edit Profile
@@ -42,9 +42,7 @@ const Page = async () => {
         </div>
 
         <div className="pt-4">
-          <Suspense>
-            <DashboardTab />
-          </Suspense>
+          <DashboardTab />
         </div>
       </div>
     </main>

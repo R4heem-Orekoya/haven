@@ -28,7 +28,7 @@ const PropertyFilter = () => {
                   router.push(`/properties?propertyType=${value}&category=${category}&state=${state}`)
                }}
             >
-               <SelectTrigger>
+               <SelectTrigger className="rounded-full">
                   <SelectValue placeholder="Select property type" />
                </SelectTrigger>
                <SelectContent>
@@ -47,7 +47,7 @@ const PropertyFilter = () => {
                   router.push(`/properties?propertyType=${propertyType}&category=${value}&state=${state}`)
                }}
             >
-               <SelectTrigger>
+               <SelectTrigger className="rounded-full">
                   <SelectValue placeholder="Select property category" />
                </SelectTrigger>
                <SelectContent>
@@ -66,7 +66,7 @@ const PropertyFilter = () => {
                   router.push(`/properties?propertyType=${propertyType}&category=${category}&state=${value}`)
                }}
             >
-               <SelectTrigger>
+               <SelectTrigger className="rounded-full">
                   <SelectValue placeholder="Select state" />
                </SelectTrigger>
                <SelectContent>
@@ -81,7 +81,7 @@ const PropertyFilter = () => {
                onClick={() => {
                   router.push("/properties")
                }}
-               className="w-full"
+               className="w-full rounded-3xl"
             >
                Reset Filter
             </Button>
