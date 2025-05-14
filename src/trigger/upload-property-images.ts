@@ -26,14 +26,14 @@ export const uploadPropertyImages = schemaTask({
             
             try {
                const result = await utapi.uploadFiles(file);
-               if (!result.data?.url || !result.data?.key) {
+               if (!result.data?.ufsUrl || !result.data?.key) {
                   throw new Error("Upload failed");
                }
 
                await db.image.update({
                   where: { id: entry.id },
                   data: {
-                     url: result.data.url,
+                     url: result.data.ufsUrl,
                      key: result.data.key,
                      status: "uploaded",
                   },

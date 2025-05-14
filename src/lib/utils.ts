@@ -22,6 +22,26 @@ export function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pi
   }, {} as Pick<T, K>);
 }
 
+interface Omit {
+  <T extends object, K extends [...(keyof T)[]]>
+    (obj: T, ...keys: K): {
+      [K2 in Exclude<keyof T, K[number]>]: T[K2]
+    }
+}
+
+export const omit: Omit = (obj, ...keys) => {
+  const ret = {} as {
+    [K in keyof typeof obj]: (typeof obj)[K]
+  };
+  let key: keyof typeof obj;
+  for (key in obj) {
+    if (!(keys.includes(key))) {
+      ret[key] = obj[key];
+    }
+  }
+  return ret;
+};
+
 export function formatPrice(price: number | string, options: {
   currency?: 'USD' | 'EUR' | 'GBP' | 'BDT' | 'NGN'
   notation?: Intl.NumberFormatOptions['notation']
@@ -30,7 +50,7 @@ export function formatPrice(price: number | string, options: {
   const { currency = 'NGN', notation = 'compact' } = options
 
   const numericPrice = typeof price === 'string' ? parseFloat(price) : price
-  
+
   const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
@@ -38,7 +58,7 @@ export function formatPrice(price: number | string, options: {
     currencySign: "standard",
     maximumFractionDigits: 0
   }).format(numericPrice)
-  
+
   if (currency === 'NGN') {
     return formatted.replace('NGN', '₦')
   }
@@ -81,10 +101,10 @@ type Result<T> = {
 }
 
 export async function tryCatch<T>(promise: Promise<T>): Promise<Result<T>> {
-  try{
+  try {
     const data = await promise
     return { data, error: null }
-  }catch(error) {
+  } catch (error) {
     return { data: null, error: error as Error }
   }
 }
@@ -95,11 +115,11 @@ export async function getProertyCount() {
       tags: ["get_proerty_count"]
     }
   })
-  
-  if(!res.ok) throw Error("Something went wrong! mmmm")
-    
+
+  if (!res.ok) throw Error("Something went wrong! mmmm")
+
   const data = await res.json()
   const count: number = data.count
-  
+
   return count
 }

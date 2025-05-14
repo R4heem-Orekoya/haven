@@ -1,7 +1,6 @@
-import { auth } from "@/auth";
+import { db } from "@/lib/db";
 import { currentUser } from "@/lib/db/queries/user";
 import { pick } from "@/lib/utils";
-import { FileEdit } from "lucide-react";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -10,11 +9,11 @@ const f = createUploadthing();
 export const ourFileRouter = {
    propertyImageUploader: f({
       image: {
-         maxFileSize: "8MB",
+         maxFileSize: "1MB",
          maxFileCount: 8,
          minFileCount: 1
       },
-   }).middleware(async ({ }) => {
+   }).middleware(async ({ input }) => {
       const signedInUser = await currentUser()
 
       if (!signedInUser || !signedInUser.id) throw new UploadThingError("Unauthorized");

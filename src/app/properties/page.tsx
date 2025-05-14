@@ -8,16 +8,16 @@ import { PropertyCategory, PropertyType } from '@prisma/client'
 import { Suspense } from "react"
 
 interface Props {
-   searchParams?: { [key: string]: string | string[] | undefined }
+   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 const Page = async ({ searchParams }: Props) => {
    const signedInUser = await currentUser()
    
-   const propertyType = searchParams?.propertyType as PropertyType | undefined
-   const category = searchParams?.category as PropertyCategory | undefined
-   const state = searchParams?.state as string | undefined
-   const page = Number(searchParams?.page as string) || 1
+   const propertyType = (await searchParams)?.propertyType as PropertyType | undefined
+   const category = (await searchParams)?.category as PropertyCategory | undefined
+   const state = (await searchParams)?.state as string | undefined
+   const page = Number((await searchParams)?.page as string) || 1
 
    const PAGINATIONITEMSTODISPLAY = 12
 

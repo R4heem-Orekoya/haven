@@ -23,7 +23,7 @@ const ProfilePicture = ({ image, name, size = "sm" }: ProfilePictureProps) => {
    return (
       <Avatar className={resolvedSize}>
          <AvatarImage style={{ background: color }} src={image || `https://api.dicebear.com/9.x/dylan/svg?seed=${name}`} />
-         <AvatarFallback>{name?.charAt(0)?.toUpperCase() || "?"}</AvatarFallback>
+         <AvatarFallback className="text-primary">{name?.charAt(0)?.toUpperCase() || "?"}</AvatarFallback>
       </Avatar>
    )
 }

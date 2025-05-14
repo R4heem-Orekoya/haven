@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { currentUser } from "@/lib/db/queries/user"
 import { UserPen } from "lucide-react"
 import Link from "next/link"
-import { Suspense } from "react"
 import { redirect } from "next/navigation"
 
 const Page = async () => {

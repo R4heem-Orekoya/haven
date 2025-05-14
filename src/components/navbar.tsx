@@ -54,25 +54,25 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                            <DropdownMenuSeparator />
                            <DropdownMenuItem asChild className="cursor-pointer">
                               <Link href="/dashboard">
-                                 <LayoutDashboard strokeWidth={1.7} className="text-muted-foreground"/>
+                                 <LayoutDashboard strokeWidth={1.7} className="size-4 text-muted-foreground"/>
                                  Dashboard
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild className="cursor-pointer">
                               <Link href="/dashboard/account/profile">
-                                 <UserRoundPen strokeWidth={1.7} className="text-muted-foreground"/>
+                                 <UserRoundPen strokeWidth={1.7} className="size-4 text-muted-foreground"/>
                                  Edit Profile
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild className="cursor-pointer">
-                              <Link href="/dashboard?tab=property_listings">
-                                 <Bookmark strokeWidth={1.7} className="text-muted-foreground"/>
+                              <Link href="/dashboard?tab=saved_properties">
+                                 <Bookmark strokeWidth={1.7} className="size-4 text-muted-foreground"/>
                                  Saved Properties
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuItem asChild >
-                              <button onClick={handleLogout} className="text-red-500 hover:text-red-500 cursor-pointer w-full">
-                                 <LogOut />
+                              <button onClick={handleLogout} className=" text-red-500 hover:text-red-500 cursor-pointer w-full">
+                                 <LogOut className="size-4"/>
                                  Logout 
                               </button>
                            </DropdownMenuItem>

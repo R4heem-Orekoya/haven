@@ -5,13 +5,13 @@ import { redirect } from "next/navigation";
 
 export default async function DashboardTab() {
    const signedInUser = await currentUser()
-   
-   if(!signedInUser || !signedInUser.id) redirect("/login")
-   
-   const savedProperties = await db.property.findMany({
+
+   if (!signedInUser || !signedInUser.id) redirect("/sign-in")
+
+   const savedPropertiesPromise = db.property.findMany({
       where: {
-         favoredByUsers:{
-            some:{
+         favoredByUsers: {
+            some: {
                id: signedInUser.id
             }
          }
@@ -20,9 +20,9 @@ export default async function DashboardTab() {
          images: true,
          user: true,
       }
+
    })
-   
-   const userProperties = await db.property.findMany({
+   const userPropertiesPromise = db.property.findMany({
       where: {
          userId: signedInUser.id
       },
@@ -30,11 +30,16 @@ export default async function DashboardTab() {
          images: true
       }
    })
-   
+
+   const [savedProperties, userProperties] = 
+   await Promise.all([savedPropertiesPromise, userPropertiesPromise])
+
+
    return (
-      <Tab 
-         signedInUser={signedInUser} 
+      <Tab
+         signedInUser={signedInUser}
          savedProperties={savedProperties}
+         userProperties={userProperties}
       />
    );
 }

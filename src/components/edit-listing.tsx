@@ -1,59 +1,119 @@
 "use client"
 
-import { ArrowLeft, Bath, Bed, Bookmark, ImagePlus, Loader2, MapPin, Ruler, SquarePen, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { propertySchema, TPropertySchema } from "@/lib/validators/property-schema"
+import { TupdatePropertySchema, updatePropertySchema } from "@/lib/validators/property-schema"
+import { PropertyWithImage } from "@/types/property"
 import { zodResolver } from "@hookform/resolvers/zod"
-import Link from "next/link"
-import { useState } from "react"
+import Image from "next/image"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import PlaceHolderImage from "../../public/placeholder.svg"
+import { Button } from "./ui/button"
+import Link from "next/link"
+import { ArrowLeft, Bath, Bed, Bookmark, ImagePlus, Loader2, Ruler, X } from "lucide-react"
+import { Badge } from "./ui/badge"
+import { formatPriceWithSuffix } from "@/lib/utils"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { states } from "@/consts/states"
-import { formatPriceWithSuffix } from "@/lib/utils"
-import Image from "next/image"
-import PlaceHolderImage from "../../public/placeholder.svg"
-import { createNewPropertyListing } from "@/actions/property"
+import { deleteImage, uploadImages } from "@/actions/image"
 import { toast } from "sonner"
+import { updatePropertyListing } from "@/actions/property"
 import { useRouter } from "next/navigation"
-import { Badge } from "./ui/badge"
 
-export const CreateListing = () => {
-   const [images, setImages] = useState<File[]>([])
+interface EditListingProps {
+   initialData: PropertyWithImage
+}
+
+export default function EditListing({ initialData }: EditListingProps) {
    const [isSubmitting, setIsSubmitting] = useState(false)
+   const [isDisabled, setIsDisabled] = useState(true);
+   const [images, setImages] = useState(initialData.images || [])
+   const [imagesToUpload, setImagesToUpload] = useState<File[] | []>([])
+   
+   const router = useRouter()
 
-   const form = useForm<TPropertySchema>({
-      resolver: zodResolver(propertySchema)
+   const form = useForm<TupdatePropertySchema>({
+      resolver: zodResolver(updatePropertySchema),
+      defaultValues: {
+         title: initialData.title,
+         address: initialData.location,
+         amenities: initialData.amenities,
+         baths: initialData.baths ?? undefined,
+         beds: initialData.beds ?? undefined,
+         category: initialData.category,
+         description: initialData.description,
+         price: initialData.price,
+         propertyType: initialData.type,
+         sqft: initialData.sqft,
+         state: initialData.state
+      }
    })
 
    const formState = form.watch()
    const propertyType = form.watch("propertyType")
    const isResidential = ["house", "apartment"].includes(propertyType)
 
+   useEffect(() => {
+      const hasChanged =
+         (formState.address !== initialData.location) ||
+         (formState.amenities !== initialData.amenities) ||
+         (formState.baths !== initialData.baths) ||
+         (formState.beds !== initialData.beds) ||
+         (formState.category !== initialData.category) ||
+         (formState.description !== initialData.description) ||
+         (formState.price !== initialData.price) ||
+         (formState.propertyType !== initialData.type) ||
+         (formState.sqft !== initialData.sqft) ||
+         (formState.state !== initialData.state) ||
+         (formState.title !== initialData.title) ||
+         (imagesToUpload.length > 0)
+
+      setIsDisabled(!hasChanged);
+   }, [formState, initialData])
+
+   const removeInitialImage = async (id: string) => {
+      if(images.length <= 5 && imagesToUpload.length === 0) {
+         toast.error("You must have at least 5 images!")
+         return
+      }
+      setImages(prev => prev.filter((image) => image.id !== id))
+
+      const res = await deleteImage(id)
+
+      if (res.error) {
+         toast.error(res.error);
+      }
+
+      if (res.success) {
+         toast.success(res.success);
+      }
+   }
+
+   const removeImage = async (index: number) => {
+      setImagesToUpload(prev => prev.filter((_, i) => i !== index))
+   }
+
    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files
       if (!files) return
 
-      if (images.length + files.length > 8) {
-         form.setError("images", { message: "Maximum 8 images allowed" })
+      if (images.length + imagesToUpload.length + files.length > 8) {
+         toast.error("You can't upload more than 8 images")
          return
       }
 
       const newImages = Array.from(files).map(file => file)
-      setImages(prev => [...prev, ...newImages])
-      form.setValue("images", [...images, ...newImages])
+      setImagesToUpload(prev => [...prev, ...newImages])
    }
 
-   const removeImage = (index: number) => {
-      setImages(prev => prev.filter((_, i) => i !== index))
-      form.setValue("images", images.filter((_, i) => i !== index))
-   }
+   const onSubmit = async (data: TupdatePropertySchema) => {
+      if (images.length + imagesToUpload.length < 5) {
+         toast.error("Select at least 5 images")
+         return
+      }
 
-   const router = useRouter()
-
-   const onSubmit = async (data: TPropertySchema) => {
       const formData = new FormData()
       formData.append("title", data.title)
       formData.append("description", data.description)
@@ -61,36 +121,30 @@ export const CreateListing = () => {
       formData.append("propertyType", data.propertyType)
       formData.append("category", data.category)
       formData.append("address", data.address),
-      formData.append("state", data.state),
-      formData.append("amenities", data.amenities)
+         formData.append("state", data.state),
+         formData.append("amenities", data.amenities)
       formData.append("sqft", String(data.sqft))
 
       if (isResidential) {
          formData.append("baths", String(data.baths))
          formData.append("beds", String(data.beds))
       }
-
-      images.forEach((image, index) => {
-         formData.append(`images`, image, image.name)
-      })
-
-      setIsSubmitting(true)
-      createNewPropertyListing(formData)
-         .then((callback) => {
-            if ('success' in callback) {
-               toast.success(callback.success)
-               router.push(`/properties/${callback.id}`)
-            }
-            if ('error' in callback) {
-               toast.error(callback.error)
-               console.log(callback);
-            }
-         })
-         .catch((error) => {
-            console.log(error);
-            toast.error("Something went wrong. Try again!")
-         })
-         .finally(() => setIsSubmitting(false))
+      
+      const updatePropertyPromise = updatePropertyListing({ formData, propertyId: initialData.id })
+      const uploadImagesPromise = uploadImages({ files: imagesToUpload, propertyId: initialData.id })
+      
+      const [res1, res2] = await Promise.all([updatePropertyPromise, imagesToUpload.length > 0 && uploadImagesPromise])
+      
+      console.log(res2);
+      
+      if(res1.error) {
+         toast.error(res1.error)
+      }
+      
+      if(res1.success) {
+         toast.success(res1.success)
+         router.refresh()
+      }
    }
 
    return (
@@ -117,7 +171,7 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="description">Description</Label>
                         <Textarea
-                           className="min-h-[120px] max-h-[250px]"
+                           className="min-h-[80px] max-h-[250px]"
                            id="description"
                            {...form.register("description")}
                         />
@@ -144,6 +198,7 @@ export const CreateListing = () => {
                            <Select
                               //@ts-expect-error
                               onValueChange={(value) => form.setValue("category", value)}
+                              defaultValue={formState.category}
                            >
                               <SelectTrigger>
                                  <SelectValue placeholder="Select listing type" />
@@ -170,6 +225,7 @@ export const CreateListing = () => {
                         <Label htmlFor="state">State</Label>
                         <Select
                            onValueChange={(value) => form.setValue("state", value)}
+                           defaultValue={formState.state}
                         >
                            <SelectTrigger>
                               <SelectValue placeholder="Select state" />
@@ -205,7 +261,6 @@ export const CreateListing = () => {
                      <div>
                         <Label htmlFor="type">Property Type</Label>
                         <Select
-
                            onValueChange={(value) => {
                               //@ts-expect-error
                               form.setValue("propertyType", value)
@@ -214,6 +269,7 @@ export const CreateListing = () => {
                                  form.setValue("baths", undefined)
                               }
                            }}
+                           defaultValue={formState.propertyType}
                         >
                            <SelectTrigger>
                               <SelectValue placeholder="Select property type" />
@@ -292,6 +348,24 @@ export const CreateListing = () => {
                      {images.map((image, index) => (
                         <div key={index} className="relative aspect-square">
                            <img
+                              src={image.url ?? PlaceHolderImage}
+                              alt={`Property ${index + 1}`}
+                              className="w-full h-full object-cover rounded-lg cursor-move"
+                           />
+                           <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-2 right-2 w-6 h-6 rounded-full"
+                              onClick={() => removeInitialImage(image.id)}
+                           >
+                              <X className="w-4 h-4" />
+                           </Button>
+                        </div>
+                     ))}
+                     {imagesToUpload.map((image, index) => (
+                        <div key={index} className="relative aspect-square">
+                           <img
                               src={URL.createObjectURL(image)}
                               alt={`Property ${index + 1}`}
                               className="w-full h-full object-cover rounded-lg cursor-move"
@@ -308,7 +382,7 @@ export const CreateListing = () => {
                         </div>
                      ))}
 
-                     {images.length < 8 && (
+                     {images.length + imagesToUpload.length < 8 && (
                         <div className="aspect-square flex items-center justify-center border-2 border-dashed rounded-lg">
                            <label className="cursor-pointer text-center p-4">
                               <ImagePlus className="mx-auto mb-2" />
@@ -324,17 +398,12 @@ export const CreateListing = () => {
                         </div>
                      )}
                   </div>
-                  {form.formState.errors.images && (
-                     <p className="text-red-500 text-sm mt-2">
-                        {form.formState.errors.images.message}
-                     </p>
-                  )}
                </div>
 
                {/* Form Actions */}
                <div className="flex justify-end gap-4">
                   <Button
-                     disabled={isSubmitting}
+                     disabled={isSubmitting || isDisabled}
                      type="button"
                      variant="outline"
                      onClick={() => { }}
@@ -342,11 +411,10 @@ export const CreateListing = () => {
                      Save as Draft
                   </Button>
                   <Button
-                     disabled={isSubmitting}
+                     disabled={isSubmitting || isDisabled}
                      type="submit"
-
                   >
-                     Publish Listing
+                     Save Changes
                      {isSubmitting && <Loader2 className="w-4 h-4 animate-spin ml-1" />}
                   </Button>
                </div>
@@ -354,7 +422,7 @@ export const CreateListing = () => {
 
             <Preview
                data={{
-                  image: images[0],
+                  image: undefined,
                   category: formState.category,
                   location: formState?.address,
                   price: formState.price,
@@ -365,11 +433,9 @@ export const CreateListing = () => {
                }}
             />
          </section>
-
       </>
    )
 }
-
 
 const Header = () => {
    return (
@@ -381,7 +447,7 @@ const Header = () => {
                      <ArrowLeft />
                   </Link>
                </Button>
-               <h1 className="text-lg md:text-xl font-semibold">Create a New Listing</h1>
+               <h1 className="text-lg md:text-xl font-semibold">Edit Property</h1>
             </div>
          </div>
       </div>

@@ -7,15 +7,16 @@ import { Bookmark, House, MessageCircleMore, Plus } from 'lucide-react'
 import { User } from '@prisma/client'
 import { cn } from '@/lib/utils'
 import { Badge } from '../ui/badge'
-import { Button } from '../ui/button'
+import { Button, buttonVariants } from '../ui/button'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { PropertyFavoriteCard } from '../property/property-cards'
-import { PropertyWithUser } from '@/types/property'
+import { PropertyFavoriteCard, PropertyListingCard } from '../property/property-cards'
+import { PropertyWithImage, PropertyWithUser } from '@/types/property'
 
-interface Tab {
-   signedInUser: User | null;
-   savedProperties: PropertyWithUser[]
+interface TabProps {
+   signedInUser: User;
+   savedProperties: PropertyWithUser[];
+   userProperties: PropertyWithImage[];
 }
 
 const tabs = [
@@ -24,7 +25,7 @@ const tabs = [
    { icon: MessageCircleMore, label: "Messages", value: "messages", new: true },
 ]
 
-export default function Tab({ signedInUser, savedProperties }: Tab) {
+export default function Tab({ signedInUser, savedProperties, userProperties }: TabProps) {
    const router = useRouter()
    const searchParams = useSearchParams()
    const currentTab = searchParams.get('tab')
@@ -42,7 +43,7 @@ export default function Tab({ signedInUser, savedProperties }: Tab) {
                      key={index}
                      value={tab.value}
                      className={cn("relative py-1.5 after:absolute after:inset-x-0 after:bottom-0 after:-mb-1 after:h-0.5 hover:bg-accent hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:after:bg-primary data-[state=active]:hover:bg-accent", {
-                        "hidden": signedInUser?.accountType === "individual" && index === 1,
+                        "hidden": signedInUser.accountType === "individual" && index === 1,
                      })}
                   >
                      <tab.icon
@@ -55,7 +56,7 @@ export default function Tab({ signedInUser, savedProperties }: Tab) {
                      {tab.new && <Badge className="ms-1.5 px-2 py-0.5 rounded-2xl">New</Badge>}
                   </TabsTrigger>
                ))}
-               {signedInUser?.accountType !== "individual" && (
+               {signedInUser.accountType !== "individual" && (
                   <Button asChild className="ml-auto rounded-3xl" size="sm">
                      <Link href="/dashboard/listing/create" className="flex items-center gap-2">
                         Create a new Listing
@@ -67,18 +68,44 @@ export default function Tab({ signedInUser, savedProperties }: Tab) {
             <ScrollBar orientation="horizontal" />
          </ScrollArea>
          <>
-            <TabsContent value='saved_properties' className='  mt-6'>
-               <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
-                  {savedProperties.map((property) => (
-                     <PropertyFavoriteCard 
-                        key={property.id}
-                        property={property} 
-                     />
-                  ))}
-               </div>
+            <TabsContent value='saved_properties' className='mt-6'>
+               {savedProperties.length > 0 ? (
+                  <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+                     {savedProperties.map((property) => (
+                        <PropertyFavoriteCard
+                           key={property.id}
+                           property={property}
+                        />
+                     ))}
+                  </div>
+               ) : (
+                  <div className='flex flex-col items-center justify-center gap-4'>
+                     <p className='text-2xl xl:text-3xl font-medium'>You haven't saved any property!</p>
+                     <Link 
+                        href="/properties" 
+                        className={buttonVariants({ size: "sm" })}
+                     >
+                        Explore Properties
+                     </Link>
+                  </div>
+               )}
             </TabsContent>
-            <TabsContent value='property_listings'>
-               hello
+            <TabsContent value='property_listings' className='mt-6'>
+               {userProperties.length > 0 ? (
+                  <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+                     {userProperties.map((property) => (
+                        <PropertyListingCard
+                           key={property.id}
+                           signedInUser={signedInUser}
+                           property={property}
+                        />
+                     ))}
+                  </div>
+               ) : (
+                  <div>
+                     You haven't created any property!
+                  </div>   
+               )}
             </TabsContent>
          </>
       </Tabs>
