@@ -17,17 +17,30 @@ export default async function DashboardTab() {
          }
       },
       include: {
-         images: true,
+         images: {
+            orderBy: {
+               order: "asc"
+            }
+         },
          user: true,
+      },
+      orderBy: {
+         updatedAt: "desc"
       }
-
    })
    const userPropertiesPromise = db.property.findMany({
       where: {
          userId: signedInUser.id
       },
       include: {
-         images: true
+         images: {
+            orderBy: {
+               order: "asc"
+            }
+         },
+      },
+      orderBy: {
+         createdAt: "desc"
       }
    })
 

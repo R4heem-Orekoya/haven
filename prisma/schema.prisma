@@ -25,41 +25,56 @@ model User {
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
   properties         Property[]
-  favoriteProperties Property[] @relation("UserFavorites")
+  favoriteProperties Property[]  @relation("UserFavorites")
   account            Account?
+  
+  @@index([id])
 }
 
 model Property {
-  id          String           @id @default(cuid())
-  title       String
-  slug        String
-  description String
-  price       Float
-  type        PropertyType
-  category    PropertyCategory
-  state       String
-  status      PropertyStatus
-  location    String
-  amenities   String
-  beds        Int?
-  baths       Int?
-  sqft        Int
-  userId      String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  images      Image[]
-  user        User             @relation(fields: [userId], references: [id])
-  favoredByUsers User[] @relation("UserFavorites")
+  id             String           @id @default(cuid())
+  title          String
+  slug           String
+  description    String
+  price          Float
+  type           PropertyType
+  category       PropertyCategory
+  state          String
+  status         PropertyStatus
+  location       String
+  amenities      String
+  beds           Int?
+  baths          Int?
+  sqft           Int
+  userId         String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  images         Image[]
+  user           User             @relation(fields: [userId], references: [id])
+  favoredByUsers User[]           @relation("UserFavorites")
+  
+  @@index([id])
+  @@index([userId])
+  @@index([type])
+  @@index([category]) 
+  @@index([state])
+  @@index([status])
 }
 
 model Image {
-  id         String   @id @default(cuid())
+  id         String      @id @default(cuid())
+  order      Int
   url        String?
+  hash       String?
   key        String?
   status     ImageStatus @default(processing)
   propertyId String
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property   Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  updatedAt  DateTime    @default(now())
   createdAt  DateTime    @default(now())
+  
+  @@index([id]) 
+  @@index([propertyId])
 }
 
 model Account {
@@ -79,6 +94,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
+  @@index([userId])
 }
 
 model VerificationToken {

@@ -42,18 +42,7 @@ export const createNewPropertyListing = async (formData: FormData) => {
       const propertyListingData = validatedData.data
       const images = propertyListingData.images
 
-      const imagePayloads = await Promise.all(
-         images.map(async (file) => {
-            const buffer = await file.arrayBuffer();
-            return {
-               name: file.name,
-               type: file.type,
-               content: Buffer.from(buffer).toString("base64"),
-            };
-         })
-      )
-
-      const { property } = await db.$transaction(async (tx) => {
+      const { property, dbImages } = await db.$transaction(async (tx) => {
          let property = await tx.property.create({
             data: {
                title: propertyListingData.title,
@@ -73,18 +62,31 @@ export const createNewPropertyListing = async (formData: FormData) => {
             },
          })
 
-         const imageRecords = images.map(() => ({
+         const imageRecords = images.map((_, i) => ({
+            order: i,
             propertyId: property.id,
             status: "processing" as ImageStatus,
          }));
 
-         await tx.image.createMany({
+         const dbImages = await tx.image.createManyAndReturn({
             data: imageRecords,
             skipDuplicates: true,
          });
 
-         return { property };
+         return { property, dbImages };
       })
+      
+      const imagePayloads = await Promise.all(
+         images.map(async (file, index) => {
+            const buffer = await file.arrayBuffer();
+            return {
+               name: file.name,
+               type: file.type,
+               content: Buffer.from(buffer).toString("base64"),
+               id: dbImages[index].id
+            };
+         })
+      )
 
       await tasks.trigger<typeof uploadPropertyImages>("upload_property_images", {
          propertyId: property.id,

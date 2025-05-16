@@ -16,7 +16,7 @@ interface Props {
 const Page = async ({ params }: Props) => {
    const signedInUser = await currentUser()
    const id = (await params).id
-   
+
    const property = await db.property.findFirst({
       where: {
          id: id
@@ -24,16 +24,16 @@ const Page = async ({ params }: Props) => {
       include: {
          images: {
             orderBy: {
-               createdAt: "asc"
+               order: "asc"
             }
          },
          user: true,
          favoredByUsers: true
       }
    })
-
+   
    if (!property) return notFound()
-      
+
    const images = property.images.filter((img) => img.status !== "failed")
 
    return (
@@ -41,20 +41,24 @@ const Page = async ({ params }: Props) => {
          <div className="grid md:grid-cols-2 gap-4 w-full">
             <div className={cn("relative col-span-1 bg-zinc-100 rounded-lg border overflow-hidden max-md:aspect-[4/3] cursor-pointer", { "h-[450px]": property.images.length < 3 })}>
                <Image
-                  src={images[0].status === "processing" ? PlaceHolderImage: images[0].url}
+                  src={images[0].status === "processing" ? PlaceHolderImage : images[0].url}
                   alt={`${property.title} thumbnail`}
                   fill
                   className={cn("object-cover", { "animate-pulse": images[0].status === "processing" })}
+                 placeholder={property.images[0].hash ? "blur" : "empty"}
+                  blurDataURL={images[0].hash ?? undefined}
                />
             </div>
             <div className="col-span-1 grid grid-cols-2 gap-4 max-md:hidden">
                {images.slice(1, 5).map((image, i) => (
                   <div key={image.id} className="relative aspect-[4/3] rounded-lg overflow-hidden border bg-zinc-100 cursor-pointer">
                      <Image
-                        src={image.status === "processing" ? PlaceHolderImage: image.url}
+                        src={image.status === "processing" ? PlaceHolderImage : image.url}
                         alt={`${property.title} image`}
                         fill
                         className={cn("object-cover", { "animate-pulse": image.status === "processing" })}
+                        placeholder={property.images[0].hash ? "blur" : "empty"}
+                        blurDataURL={image.hash ?? undefined}
                      />
                      {property.images.length > 5 && i === property.images.slice(1, 5).length - 1 && (
                         <div className="absolute grid place-items-center inset-0 bg-black/60 backdrop-blur-sm">
@@ -65,7 +69,7 @@ const Page = async ({ params }: Props) => {
                ))}
             </div>
          </div>
-         
+
          <PropertyDetails
             property={property}
             signedInUser={signedInUser}

@@ -9,18 +9,14 @@ export const uploadPropertyImages = schemaTask({
       images: z.object({
          name: z.string(),
          type: z.string(),
-         content: z.string()
+         content: z.string(),
+         id: z.string()
       }).array(),
       propertyId: z.string()
    }),
    run: async (payload, { ctx }) => {
-      const imageEntries = await db.image.findMany({
-         where: { propertyId: payload.propertyId },
-      });
-
       const uploadedImages = await Promise.all(
-         payload.images.map(async (image, index) => {
-            const entry = imageEntries[index];
+         payload.images.map(async (image) => {
             const buffer = Buffer.from(image.content, "base64");
             const file = new File([buffer], image.name, { type: image.type });
             
@@ -31,16 +27,17 @@ export const uploadPropertyImages = schemaTask({
                }
 
                await db.image.update({
-                  where: { id: entry.id },
+                  where: { id: image.id },
                   data: {
                      url: result.data.ufsUrl,
                      key: result.data.key,
+                     hash: result.data.fileHash,
                      status: "uploaded",
                   },
                });
             } catch (error) {
                await db.image.update({
-                  where: { id: entry.id },
+                  where: { id: image.id },
                   data: {
                      status: "failed",
                   },

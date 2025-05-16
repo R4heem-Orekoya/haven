@@ -50,12 +50,14 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
          }}
          className="col-span-1 cursor-pointer"
       >
-         <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+         <div className="relative aspect-[16/10] overflow-hidden rounded-lg border">
             <Image
                src={property.images[0].url!}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
+               placeholder={property.images[0].hash ? "blur" : "empty"}
+               blurDataURL={property.images[0].hash ?? undefined}
             />
 
             <Button onClick={(e) => {
@@ -123,12 +125,14 @@ export const PropertyFavoriteCard = ({ property }: { property: PropertyWithUser 
             router.push(`/properties/${property.id}`)
          }}
       >
-         <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+         <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
             <Image
                src={property.images[0].url!}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
+               placeholder={property.images[0].hash ? "blur" : "empty"}
+               blurDataURL={property.images[0].hash ?? undefined}
             />
 
             <Button onClick={(e) => {
@@ -211,12 +215,14 @@ export const PropertyListingCard = ({ property, signedInUser }: PropertyListingC
             router.push(`/properties/${property.id}`)
          }}
       >
-         <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+         <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
             <Image
                src={property.images[0].url!}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
+               placeholder={property.images[0].hash ? "blur" : "empty"}
+               blurDataURL={property.images[0].hash ?? undefined}
             />
 
             <div className="flex justify-between w-[calc(100%-2rem)] absolute top-4 left-4">

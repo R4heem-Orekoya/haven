@@ -21,6 +21,7 @@ import { deleteImage, uploadImages } from "@/actions/image"
 import { toast } from "sonner"
 import { updatePropertyListing } from "@/actions/property"
 import { useRouter } from "next/navigation"
+import { Image as TImage } from "@prisma/client"
 
 interface EditListingProps {
    initialData: PropertyWithImage
@@ -31,7 +32,7 @@ export default function EditListing({ initialData }: EditListingProps) {
    const [isDisabled, setIsDisabled] = useState(true);
    const [images, setImages] = useState(initialData.images || [])
    const [imagesToUpload, setImagesToUpload] = useState<File[] | []>([])
-   
+
    const router = useRouter()
 
    const form = useForm<TupdatePropertySchema>({
@@ -74,7 +75,7 @@ export default function EditListing({ initialData }: EditListingProps) {
    }, [formState, initialData])
 
    const removeInitialImage = async (id: string) => {
-      if(images.length <= 5 && imagesToUpload.length === 0) {
+      if (images.length + imagesToUpload.length <= 5) {
          toast.error("You must have at least 5 images!")
          return
       }
@@ -109,11 +110,11 @@ export default function EditListing({ initialData }: EditListingProps) {
    }
 
    const onSubmit = async (data: TupdatePropertySchema) => {
+      setIsSubmitting(true)
       if (images.length + imagesToUpload.length < 5) {
          toast.error("Select at least 5 images")
          return
       }
-
       const formData = new FormData()
       formData.append("title", data.title)
       formData.append("description", data.description)
@@ -129,21 +130,23 @@ export default function EditListing({ initialData }: EditListingProps) {
          formData.append("baths", String(data.baths))
          formData.append("beds", String(data.beds))
       }
-      
+
       const updatePropertyPromise = updatePropertyListing({ formData, propertyId: initialData.id })
       const uploadImagesPromise = uploadImages({ files: imagesToUpload, propertyId: initialData.id })
-      
+
       const [res1, res2] = await Promise.all([updatePropertyPromise, imagesToUpload.length > 0 && uploadImagesPromise])
-      
+
       console.log(res2);
-      
-      if(res1.error) {
+
+      if (res1.error) {
          toast.error(res1.error)
+         setIsSubmitting(true)
       }
-      
-      if(res1.success) {
+
+      if (res1.success) {
          toast.success(res1.success)
-         router.refresh()
+         setIsSubmitting(true)
+         router.push(`/properties/${initialData.id}`)
       }
    }
 
@@ -186,7 +189,9 @@ export default function EditListing({ initialData }: EditListingProps) {
                            <Input
                               id="price"
                               type="number"
-                              {...form.register("price")}
+                              {...form.register("price", {
+                                 setValueAs: (v) => v === "" ? 0 : Number(v),
+                              })}
                            />
                            <p className="mt-2 text-xs text-destructive">
                               {form.formState.errors.price?.message}
@@ -293,7 +298,9 @@ export default function EditListing({ initialData }: EditListingProps) {
                               <Input
                                  id="beds"
                                  type="number"
-                                 {...form.register("beds")}
+                                 {...form.register("beds", {
+                                    setValueAs: (v) => v === "" ? 0 : Number(v),
+                                 })}
                               />
                               <p className="mt-2 text-xs text-destructive">
                                  {form.formState.errors?.beds?.message}
@@ -305,7 +312,9 @@ export default function EditListing({ initialData }: EditListingProps) {
                               <Input
                                  id="baths"
                                  type="number"
-                                 {...form.register("baths")}
+                                 {...form.register("baths", {
+                                    setValueAs: (v) => v === "" ? 0 : Number(v),
+                                 })}
                               />
                               <p className="mt-2 text-xs text-destructive">
                                  {form.formState.errors?.baths?.message}
@@ -319,7 +328,9 @@ export default function EditListing({ initialData }: EditListingProps) {
                         <Input
                            id="sqft"
                            type="number"
-                           {...form.register("sqft")}
+                           {...form.register("sqft", {
+                              setValueAs: (v) => v === "" ? 0 : Number(v),
+                           })}
                         />
                         <p className="mt-2 text-xs text-destructive">
                            {form.formState.errors?.sqft?.message}
@@ -346,7 +357,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                   <h2 className="text-lg font-semibold mb-4">Property Images</h2>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                      {images.map((image, index) => (
-                        <div key={index} className="relative aspect-square">
+                        <div key={index} className="relative aspect-square border rounded-lg">
                            <img
                               src={image.url ?? PlaceHolderImage}
                               alt={`Property ${index + 1}`}
@@ -364,7 +375,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                         </div>
                      ))}
                      {imagesToUpload.map((image, index) => (
-                        <div key={index} className="relative aspect-square">
+                        <div key={index} className="relative aspect-square border">
                            <img
                               src={URL.createObjectURL(image)}
                               alt={`Property ${index + 1}`}
@@ -422,7 +433,11 @@ export default function EditListing({ initialData }: EditListingProps) {
 
             <Preview
                data={{
-                  image: undefined,
+                  image: initialData.images.length > 0
+                     ? (initialData.images[0].url ?? PlaceHolderImage)
+                     : imagesToUpload.length > 0
+                        ? URL.createObjectURL(imagesToUpload[0])
+                        : PlaceHolderImage,
                   category: formState.category,
                   location: formState?.address,
                   price: formState.price,
@@ -456,7 +471,7 @@ const Header = () => {
 
 interface PreviewProps {
    data: {
-      image: File | undefined
+      image: string | undefined
       title: string | undefined
       category: "rent" | "sale" | "shortlet" | undefined
       location: string | undefined
@@ -473,10 +488,10 @@ const Preview = ({ data: { image, category, location, price, sqft, title, baths,
          <h3 className="font-semibold">Quick Preview</h3>
 
          <div className="mt-4">
-            <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-lg border">
                {image ? (
                   <Image
-                     src={URL.createObjectURL(image) || PlaceHolderImage}
+                     src={image || PlaceHolderImage}
                      alt={title || "Placeholder Image Alt text"}
                      fill
                      className="object-cover"

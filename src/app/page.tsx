@@ -1,5 +1,5 @@
 import Heading from "@/components/Heading"
-import SearchForm from "@/components/hero-search/SearchForm"
+import SearchForm from "@/components/property/hero-search/SearchForm"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import image from "../../public/image.jpg"

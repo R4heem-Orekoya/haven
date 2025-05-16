@@ -5,8 +5,8 @@ import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Com
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Check, ChevronsUpDown, } from "lucide-react"
-import { Label } from "../ui/label"
-import { Button } from "../ui/button"
+import { Label } from "../../ui/label"
+import { Button } from "../../ui/button"
 import { states } from "@/consts/states"
 import { FieldErrors, UseFormSetValue } from "react-hook-form"
 

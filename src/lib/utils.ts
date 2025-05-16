@@ -1,3 +1,4 @@
+import { User } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -76,6 +77,10 @@ export const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1, str.length).toLowerCase()
 }
 
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export const getRandomColor = () => {
   const colors = [
     '#FF5733', // Bright Orange/Red-Orange
@@ -122,4 +127,14 @@ export async function getProertyCount() {
   const count: number = data.count
 
   return count
+}
+
+export function isUserVerified(user: User) {
+  return (
+    !!user.email &&
+    !!user.image &&
+    !!user.bio &&
+    !!user.personalWebsiteUrl &&
+    !!user.phoneNumber
+  )
 }

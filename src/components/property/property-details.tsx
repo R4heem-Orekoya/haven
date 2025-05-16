@@ -4,8 +4,8 @@ import ShareToolTip from "@/components/property/share-tooltip"
 import ProfilePicture from "@/components/profile-picture"
 import { Button } from "@/components/ui/button"
 import { Prisma, User } from "@prisma/client"
-import { capitalizeFirstLetter, cn, formatPriceWithSuffix, sluggify } from "@/lib/utils"
-import { Banknote, Bath, Bed, Bookmark, Building, Calendar, CalendarDays, DollarSign, Globe, Home, Info, MapPin, MapPinned, Phone, Square } from "lucide-react"
+import { capitalizeFirstLetter, cn, formatPriceWithSuffix, isUserVerified, sluggify } from "@/lib/utils"
+import { BadgeCheck, Banknote, Bath, Bed, Bookmark, Building, Calendar, CalendarDays, DollarSign, Globe, Home, Info, MapPin, MapPinned, Phone, Square } from "lucide-react"
 import Link from "next/link"
 import { savePropertyAction } from "@/actions/property"
 import { toast } from "sonner"
@@ -33,9 +33,9 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
    const [isFavorited, setIsFavorited] = useState(() =>
       signedInUser && property.favoredByUsers.some(user => user.id === signedInUser.id)
    );
-   
+
    const amenities = property.amenities.split(",").map((item) => item.trim())
-   
+
    const handleSave = async () => {
       const res = await savePropertyAction(property.id);
 
@@ -46,6 +46,8 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
       }
    };
 
+   const isVerified = isUserVerified(property.user)
+   
    return (
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 mt-6 w-full">
          <div className="col-span-1 lg:col-span-5 rounded-lg py-4 space-y-6">
@@ -163,10 +165,13 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                   name={property.user.name ?? "Property Developer"}
                />
                <Link
-                  className="font-medium"
+                  className="font-medium flex items-center gap-1"
                   href={`/${property.user.accountType}s/${sluggify(property.user.name!)}`}
                >
                   {property.user.name}
+                  {isVerified && (
+                     <BadgeCheck className="fill-green-600 stroke-background w-4 h-4" />
+                  )}
                </Link>
             </div>
 

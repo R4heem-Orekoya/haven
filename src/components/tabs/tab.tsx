@@ -3,7 +3,7 @@
 import React from 'react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import { Bookmark, House, MessageCircleMore, Plus } from 'lucide-react'
+import { Bookmark, House, Plus } from 'lucide-react'
 import { User } from '@prisma/client'
 import { cn } from '@/lib/utils'
 import { Badge } from '../ui/badge'
@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PropertyFavoriteCard, PropertyListingCard } from '../property/property-cards'
 import { PropertyWithImage, PropertyWithUser } from '@/types/property'
+import Explore from '../svgs/explore'
 
 interface TabProps {
    signedInUser: User;
@@ -22,7 +23,7 @@ interface TabProps {
 const tabs = [
    { icon: Bookmark, label: "Saved Properties", value: "saved_properties", new: false },
    { icon: House, label: "Property Listings", value: "property_listings", new: false },
-   { icon: MessageCircleMore, label: "Messages", value: "messages", new: true },
+   // { icon: MessageCircleMore, label: "Messages", value: "messages", new: true },
 ]
 
 export default function Tab({ signedInUser, savedProperties, userProperties }: TabProps) {
@@ -57,7 +58,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                   </TabsTrigger>
                ))}
                {signedInUser.accountType !== "individual" && (
-                  <Button asChild className="ml-auto rounded-3xl" size="sm">
+                  <Button asChild className="ml-auto rounded-3xl hidden sm:flex">
                      <Link href="/dashboard/listing/create" className="flex items-center gap-2">
                         Create a new Listing
                         <Plus />
@@ -80,10 +81,11 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                   </div>
                ) : (
                   <div className='flex flex-col items-center justify-center gap-4'>
-                     <p className='text-2xl xl:text-3xl font-medium'>You haven't saved any property!</p>
-                     <Link 
-                        href="/properties" 
-                        className={buttonVariants({ size: "sm" })}
+                     <Explore className='w-48 h-48'/>
+                     <p className='text-2xl xl:text-3xl font-medium mb-2'>You haven't saved any property!</p>
+                     <Link
+                        href="/properties"
+                        className={buttonVariants()}
                      >
                         Explore Properties
                      </Link>
@@ -102,9 +104,16 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                      ))}
                   </div>
                ) : (
-                  <div>
-                     You haven't created any property!
-                  </div>   
+                  <div className='flex flex-col items-center justify-center gap-4'>
+                     <p className='text-2xl xl:text-3xl font-medium'>You haven't saved any property!</p>
+                     <Link
+                        href="/dashboard/listing/create"
+                        className={buttonVariants({ className: "flex items-center gap-2" })}
+                     >
+                        Create a new listing
+                        <Plus />
+                     </Link>
+                  </div>
                )}
             </TabsContent>
          </>

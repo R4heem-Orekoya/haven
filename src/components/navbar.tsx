@@ -11,12 +11,16 @@ import { useCallback } from "react"
 import { logoutAction } from "@/actions/auth"
 import { toast } from "sonner"
 import { User } from "@prisma/client"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 interface NavbarProps {
 	signedInuser: User | null
 }
 
 const Navbar = ({ signedInuser }: NavbarProps) => {
+   const pathname = usePathname()
+   
    const handleLogout = useCallback(() => {
 		const promise = logoutAction("/")
 		toast.promise(promise, {
@@ -24,7 +28,6 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
 			success: () => {
 				return "Logged out successfully!";
 			},
-			error: "Couldn't logout, try again!",
 		})
 	}, [])
    
@@ -38,9 +41,9 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
             <MobileNav />
             <div className="hidden md:flex items-center gap-10">
                <nav className="flex items-center gap-6">
-                  <Link href="/properties" className="text-sm text-muted-foreground hover:text-primary duration-300">Properties</Link>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary duration-300">Estate Agents</Link>
-                  <Link href="#" className="text-sm text-muted-foreground hover:text-primary duration-300">Property Developers</Link>
+                  <Link href="/properties" className={cn("text-sm text-muted-foreground hover:text-primary duration-300", { "text-primary font-semibold": pathname === "/properties" })}>Properties</Link>
+                  <Link href="/estate-agents" className={cn("text-sm text-muted-foreground hover:text-primary duration-300", { "text-primary font-semibold": pathname === "/estate-agents" })}>Estate Agents</Link>
+                  <Link href="/property-developers" className={cn("text-sm text-muted-foreground hover:text-primary duration-300", { "text-primary font-semibold": pathname === "/property-developers" })}>Property Developers</Link>
                </nav>
 
                <div className="flex space-x-4">

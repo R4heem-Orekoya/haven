@@ -71,6 +71,9 @@ export async function uploadImages({ files, propertyId }: { files: File[], prope
       const property = await db.property.findUnique({
          where: {
             id: propertyId
+         },
+         include:{
+            images: true
          }
       })
 
@@ -82,26 +85,28 @@ export async function uploadImages({ files, propertyId }: { files: File[], prope
          return { error: "You are not authorized to perform this action!" }
       }
 
+      const imageRecords = files.map((_, i) => ({
+         propertyId: property.id,
+         order: property.images.length + i,
+         status: "processing" as ImageStatus,
+      }));
+
+      const dbImages = await db.image.createManyAndReturn({
+         data: imageRecords,
+         skipDuplicates: true,
+      })
+      
       const imagePayloads = await Promise.all(
-         files.map(async (file) => {
+         files.map(async (file, i) => {
             const buffer = await file.arrayBuffer();
             return {
                name: file.name,
                type: file.type,
+               id: dbImages[i].id,
                content: Buffer.from(buffer).toString("base64"),
             };
          })
       )
-
-      const imageRecords = imagePayloads.map(() => ({
-         propertyId: property.id,
-         status: "processing" as ImageStatus,
-      }));
-
-      await db.image.createMany({
-         data: imageRecords,
-         skipDuplicates: true,
-      })
 
       await tasks.trigger<typeof uploadPropertyImages>("upload_property_images", {
          propertyId: property.id,
