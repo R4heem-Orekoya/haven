@@ -131,6 +131,7 @@ export async function getProertyCount() {
 
 export function isUserVerified(user: User) {
   return (
+    user.accountType !== "individual" &&
     !!user.email &&
     !!user.image &&
     !!user.bio &&

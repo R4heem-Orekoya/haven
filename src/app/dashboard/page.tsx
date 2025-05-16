@@ -6,6 +6,7 @@ import { BadgeCheck, Plus, UserPen } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { isUserVerified } from "@/lib/utils"
+import AuthInfo from "@/components/auth/info"
 
 const Page = async () => {
   const signedInUser = await currentUser()
@@ -17,6 +18,11 @@ const Page = async () => {
   return (
     <main className="container mx-auto px-4 md:px-6 lg:px-8 py-16">
       <div className="max-w-5xl mx-auto">
+      {signedInUser.accountType !== "individual" && !isVerified && (
+        <div className="mb-4 max-w-xl mx-auto">
+          <AuthInfo message="Add a bio, address, profile picture, phone number and website url to get verified." />
+        </div>
+      )}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-6">
             <ProfilePicture
