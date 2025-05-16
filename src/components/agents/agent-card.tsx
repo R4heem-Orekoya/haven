@@ -25,8 +25,8 @@ export default function AgentCard({ agent }: AgentCardProps) {
       >
          <div className="flex items-center gap-4">
             <ProfilePicture
-               image={agent.image!}
-               name={agent.name!}
+               image={agent.image}
+               name={agent.name}
                size="md"
             />
             <div>

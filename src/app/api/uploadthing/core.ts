@@ -14,7 +14,7 @@ export const ourFileRouter = {
          maxFileCount: 8,
          minFileCount: 1
       },
-   }).middleware(async ({ input }) => {
+   }).middleware(async () => {
       const signedInUser = await currentUser()
 
       if (!signedInUser || !signedInUser.id) throw new UploadThingError("Unauthorized");

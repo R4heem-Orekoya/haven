@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/db/queries/user"
-import { getProertyCount, sleep, tryCatch } from "@/lib/utils";
+import { getProertyCount, tryCatch } from "@/lib/utils";
 import { PropertyCategory, PropertyType } from "@prisma/client";
 import { PropertyGrid } from "./property-grid";
 import PropertyPagination from "./property-pagination";

@@ -161,7 +161,7 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
 
             <div className="flex items-center gap-2 mt-3">
                <ProfilePicture
-                  image={property.user.image!}
+                  image={property.user.image}
                   name={property.user.name ?? "Property Developer"}
                />
                <Link

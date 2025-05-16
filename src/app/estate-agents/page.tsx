@@ -1,7 +1,6 @@
 import Agents from "@/components/agents/agents"
 import AgentsSkeleton from "@/components/agents/agents-skeleton"
 import { db } from "@/lib/db"
-import { sleep } from "@/lib/utils"
 import { Suspense } from "react"
 
 export default async function Page() {

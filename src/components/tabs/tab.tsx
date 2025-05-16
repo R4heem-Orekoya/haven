@@ -82,7 +82,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                ) : (
                   <div className='flex flex-col items-center justify-center gap-4'>
                      <Explore className='w-48 h-48'/>
-                     <p className='text-2xl xl:text-3xl font-medium mb-2'>You haven't saved any property!</p>
+                     <p className='text-2xl xl:text-3xl font-medium mb-2'>You haven&apos;t saved any property!</p>
                      <Link
                         href="/properties"
                         className={buttonVariants()}
@@ -105,7 +105,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                   </div>
                ) : (
                   <div className='flex flex-col items-center justify-center gap-4'>
-                     <p className='text-2xl xl:text-3xl font-medium'>You haven't saved any property!</p>
+                     <p className='text-2xl xl:text-3xl font-medium'>You haven&apos;t saved any property!</p>
                      <Link
                         href="/dashboard/listing/create"
                         className={buttonVariants({ className: "flex items-center gap-2" })}

@@ -1,4 +1,3 @@
-import { Bed, Bath, Ruler } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface PropertyCardSkeletonProps {

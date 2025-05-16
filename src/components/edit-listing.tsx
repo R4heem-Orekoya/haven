@@ -21,7 +21,6 @@ import { deleteImage, uploadImages } from "@/actions/image"
 import { toast } from "sonner"
 import { updatePropertyListing } from "@/actions/property"
 import { useRouter } from "next/navigation"
-import { Image as TImage } from "@prisma/client"
 
 interface EditListingProps {
    initialData: PropertyWithImage
@@ -72,7 +71,7 @@ export default function EditListing({ initialData }: EditListingProps) {
          (imagesToUpload.length > 0)
 
       setIsDisabled(!hasChanged);
-   }, [formState, initialData])
+   }, [formState, initialData, imagesToUpload.length])
 
    const removeInitialImage = async (id: string) => {
       if (images.length + imagesToUpload.length <= 5) {
@@ -121,9 +120,9 @@ export default function EditListing({ initialData }: EditListingProps) {
       formData.append("price", String(data.price))
       formData.append("propertyType", data.propertyType)
       formData.append("category", data.category)
-      formData.append("address", data.address),
-         formData.append("state", data.state),
-         formData.append("amenities", data.amenities)
+      formData.append("address", data.address)
+      formData.append("state", data.state)
+      formData.append("amenities", data.amenities)
       formData.append("sqft", String(data.sqft))
 
       if (isResidential) {
@@ -201,7 +200,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                         <div>
                            <Label htmlFor="price">Listing Type</Label>
                            <Select
-                              //@ts-expect-error
+                              //@ts-expect-error some error
                               onValueChange={(value) => form.setValue("category", value)}
                               defaultValue={formState.category}
                            >
@@ -267,7 +266,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                         <Label htmlFor="type">Property Type</Label>
                         <Select
                            onValueChange={(value) => {
-                              //@ts-expect-error
+                              //@ts-expect-error some error
                               form.setValue("propertyType", value)
                               if (value === "land" || value === "commercial") {
                                  form.setValue("beds", undefined)

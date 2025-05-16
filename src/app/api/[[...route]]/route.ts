@@ -21,7 +21,8 @@ app.get("/property/count", async (c) => {
       const count = await db.property.count()
 
       return c.json({ count })
-   } catch (error: any) {
+   } catch (error) {
+      //@ts-expect-error unknown error
       return c.json({ message: error.message })
    }
 })

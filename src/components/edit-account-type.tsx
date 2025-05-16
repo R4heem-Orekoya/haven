@@ -76,7 +76,7 @@ const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
             className="gap-2" value={selectedAccountType}
             onValueChange={(value: "individual" | "estate_agent" | "property_owner" | "property_developer") => setSelectedAccountType(value)}
          >
-            {accountTypes.map((type, i) => (
+            {accountTypes.map((type) => (
                <div key={type.id} className="relative flex w-full items-start gap-2 rounded-lg border border-input p-4 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring">
                   <RadioGroupItem
                      value={type.value}

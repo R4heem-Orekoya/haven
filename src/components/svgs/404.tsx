@@ -80,5 +80,6 @@ const NotFoundIllustration = React.forwardRef<illustrAtion_10Element, illustrAti
       </svg>
 
    ));
+NotFoundIllustration.displayName = "NotFoundIllustration"
 
 export default NotFoundIllustration;

@@ -24,7 +24,7 @@ export default async function PropertyDeveloper() {
             <p className="text-muted-foreground">No estate agents found.</p>
          ) : (
             estateAgents.map((agent) => (
-               <AgentCard agent={agent} />
+               <AgentCard key={agent.id} agent={agent} />
             ))
          )}
       </>

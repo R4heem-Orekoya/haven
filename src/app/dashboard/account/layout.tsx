@@ -1,6 +1,5 @@
 import EditProfileSidebar from '@/components/edit-profile-sidebar'
 import ProfilePicture from '@/components/profile-picture'
-import { Separator } from '@/components/ui/separator'
 import { currentUser } from '@/lib/db/queries/user'
 import React, { ReactNode } from 'react'
 
@@ -17,8 +16,8 @@ const AccountLayout = async ({ children }: AccountLayoutProps) => {
             <div className="flex items-center gap-4">
                <ProfilePicture
                   size="lg"
-                  image={signedInUser?.image!}
-                  name={signedInUser?.name!}
+                  image={signedInUser?.image}
+                  name={signedInUser?.name}
                />
                <div className="grid">
                   <h2 className="text-lg md:text-xl font-semibold">{signedInUser?.name} / Edit Profile</h2>

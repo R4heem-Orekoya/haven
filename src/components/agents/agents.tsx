@@ -3,7 +3,6 @@
 import React, { use } from 'react'
 import AgentCard from './agent-card'
 import { User } from '@prisma/client'
-import { sleep } from '@/lib/utils'
 
 interface AgentsProps {
    agentsPromise: Promise<User[]>

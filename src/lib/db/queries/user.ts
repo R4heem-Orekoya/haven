@@ -11,6 +11,7 @@ export const getUserByEmail = async (email: string) => {
       
       return user
    } catch(err) {
+      console.log(err);
       return null
    }
 }
@@ -25,6 +26,7 @@ export const getUserById = async (id: string) => {
       
       return user
    } catch(err) {
+      console.log(err);
       return null
    }
 }
@@ -48,6 +50,7 @@ export const getUsers = async () => {
       
       return users
    } catch (error) {
+      console.log(error);
       return []
    }
 }
@@ -61,6 +64,7 @@ export const currentUser = async () => {
       
       return user
    } catch (error) {
+      console.log(error);
       return null
    }
 }

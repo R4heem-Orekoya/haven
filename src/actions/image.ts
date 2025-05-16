@@ -115,7 +115,7 @@ export async function uploadImages({ files, propertyId }: { files: File[], prope
 
       return { success: "Images uploaded!" }
    } catch (error) {
-      console.log("Failed to upload images");
+      console.log("Failed to upload images", error);
       return { error: "Something went wrong!" }
    }
 }

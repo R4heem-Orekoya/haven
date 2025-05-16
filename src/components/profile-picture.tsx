@@ -4,8 +4,8 @@ import { useMemo } from "react";
 
 type size = typeof sizes[number]["size"]
 interface ProfilePictureProps {
-   name: string
-   image: string | undefined
+   name: string | undefined | null
+   image: string | undefined | null
    size?: size
 }
 
@@ -24,7 +24,7 @@ const ProfilePicture = ({ image, name, size = "sm" }: ProfilePictureProps) => {
    return (
       <Avatar className={resolvedSize}>
          <AvatarImage style={{ background: color, objectFit: "cover" }} src={image || `https://api.dicebear.com/9.x/dylan/svg?seed=${name}`} />
-         <AvatarFallback className="text-primary">{name?.charAt(0)?.toUpperCase() || "?"}</AvatarFallback>
+         <AvatarFallback className="text-primary font-medium">{name?.charAt(0)?.toUpperCase() || "?"}</AvatarFallback>
       </Avatar>
    )
 }

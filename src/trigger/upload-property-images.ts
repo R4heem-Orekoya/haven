@@ -14,8 +14,8 @@ export const uploadPropertyImages = schemaTask({
       }).array(),
       propertyId: z.string()
    }),
-   run: async (payload, { ctx }) => {
-      const uploadedImages = await Promise.all(
+   run: async (payload) => {
+      await Promise.all(
          payload.images.map(async (image) => {
             const buffer = Buffer.from(image.content, "base64");
             const file = new File([buffer], image.name, { type: image.type });
@@ -36,6 +36,7 @@ export const uploadPropertyImages = schemaTask({
                   },
                });
             } catch (error) {
+               console.log(error);
                await db.image.update({
                   where: { id: image.id },
                   data: {

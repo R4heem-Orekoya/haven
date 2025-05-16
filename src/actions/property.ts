@@ -43,7 +43,7 @@ export const createNewPropertyListing = async (formData: FormData) => {
       const images = propertyListingData.images
 
       const { property, dbImages } = await db.$transaction(async (tx) => {
-         let property = await tx.property.create({
+         const property = await tx.property.create({
             data: {
                title: propertyListingData.title,
                description: propertyListingData.description,

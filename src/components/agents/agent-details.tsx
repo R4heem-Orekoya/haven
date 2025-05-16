@@ -1,6 +1,6 @@
 import { db } from "@/lib/db"
 import { currentUser } from "@/lib/db/queries/user"
-import { isUserVerified, sleep } from "@/lib/utils"
+import { isUserVerified } from "@/lib/utils"
 import { notFound } from "next/navigation"
 import { Globe, CalendarCheck, Phone, MapPin, Mail, User as UserIcon, Home, BadgeCheck } from "lucide-react"
 import ProfilePicture from "@/components/profile-picture"
@@ -34,8 +34,8 @@ export default async function AgentDetails({ id }: AgentDetailsProps) {
       <div className="max-w-4xl mx-auto p-6 space-y-6 border rounded-lg shadow-sm">
          <div className="flex items-center gap-4 mb-6">
             <ProfilePicture
-               image={propertyDeveloper.image!}
-               name={propertyDeveloper.name!}
+               image={propertyDeveloper.image}
+               name={propertyDeveloper.name}
                size="xl"
             />
             <div>

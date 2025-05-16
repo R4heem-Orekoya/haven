@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Bath, Bed, Bookmark, ImagePlus, Loader2, MapPin, Ruler, SquarePen, X } from "lucide-react"
+import { ArrowLeft, Bath, Bed, Bookmark, ImagePlus, Loader2, Ruler, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { propertySchema, TPropertySchema } from "@/lib/validators/property-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -60,8 +60,8 @@ export const CreateListing = () => {
       formData.append("price", String(data.price))
       formData.append("propertyType", data.propertyType)
       formData.append("category", data.category)
-      formData.append("address", data.address),
-      formData.append("state", data.state),
+      formData.append("address", data.address)
+      formData.append("state", data.state)
       formData.append("amenities", data.amenities)
       formData.append("sqft", String(data.sqft))
 
@@ -70,7 +70,7 @@ export const CreateListing = () => {
          formData.append("beds", String(data.beds))
       }
 
-      images.forEach((image, index) => {
+      images.forEach((image) => {
          formData.append(`images`, image, image.name)
       })
 
@@ -142,7 +142,7 @@ export const CreateListing = () => {
                         <div>
                            <Label htmlFor="price">Listing Type</Label>
                            <Select
-                              //@ts-expect-error
+                              //@ts-expect-error some error
                               onValueChange={(value) => form.setValue("category", value)}
                            >
                               <SelectTrigger>
@@ -207,7 +207,7 @@ export const CreateListing = () => {
                         <Select
 
                            onValueChange={(value) => {
-                              //@ts-expect-error
+                              //@ts-expect-error some error
                               form.setValue("propertyType", value)
                               if (value === "land" || value === "commercial") {
                                  form.setValue("beds", undefined)

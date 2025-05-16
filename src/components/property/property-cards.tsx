@@ -180,7 +180,7 @@ export const PropertyFavoriteCard = ({ property }: { property: PropertyWithUser 
    )
 }
 
-export const PropertyListingCard = ({ property, signedInUser }: PropertyListingCardProps) => {
+export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
    const router = useRouter()
 
    async function handleDelete(propertyId: string) {

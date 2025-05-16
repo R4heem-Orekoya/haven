@@ -2,7 +2,6 @@
 
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
 import { propertyTypes } from "@/consts/property-types"
 import { states } from "@/consts/states"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -71,7 +70,7 @@ const PropertyFilter = () => {
                </SelectTrigger>
                <SelectContent>
                   {states.map((state) => (
-                     <SelectItem value={state.value}>{state.label}</SelectItem>
+                     <SelectItem key={state.value} value={state.value}>{state.label}</SelectItem>
                   ))}
                </SelectContent>
             </Select>

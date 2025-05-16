@@ -27,8 +27,8 @@ const Page = async () => {
           <div className="flex items-center gap-6">
             <ProfilePicture
               size="2xl"
-              image={signedInUser.image as string}
-              name={signedInUser.name as string}
+              image={signedInUser.image}
+              name={signedInUser.name}
             />
             <div>
               <h2 className="text-xl md:text-2xl font-semibold flex items-center gap-2">

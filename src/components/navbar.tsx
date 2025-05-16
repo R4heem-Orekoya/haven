@@ -49,7 +49,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                   {signedInuser ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger className="rounded-full focus:outline-offset-4">
-                           <ProfilePicture image={signedInuser.image!} name={signedInuser.name!} />
+                           <ProfilePicture image={signedInuser.image} name={signedInuser.name} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[250px] mt-3 border z-[999]">
                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
