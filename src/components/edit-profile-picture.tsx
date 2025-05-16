@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { useCallback, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import PlaceHolderProfilePicture from "../../public/placeholder-profile-picture.svg"
 import { useUploadThing } from "@/lib/uploadthing"
 import { toast } from "sonner"
@@ -28,13 +28,13 @@ const EditProfilePicture = ({ signedInUser }: EditProfilePictureProps) => {
    const fileInputRef = useRef<HTMLInputElement>(null)
    const [image, setImage] = useState<File | null>(null)
 
-   const handeClick = useCallback(() => {
+   const handeClick = () => {
       fileInputRef.current?.click()
-   }, [])
+   }
 
-   const handleUpload = useCallback(async (file: File) => {
+   const handleUpload = async (file: File) => {
       await uploadthing.startUpload([file])
-   }, [image])
+   }
 
    return (
       <div className="flex items-center gap-4">

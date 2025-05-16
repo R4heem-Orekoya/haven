@@ -7,7 +7,6 @@ import MobileNav from "./MobileNav"
 import ProfilePicture from "./profile-picture"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Bookmark, LayoutDashboard, LogOut, UserRoundPen } from "lucide-react"
-import { useCallback } from "react"
 import { logoutAction } from "@/actions/auth"
 import { toast } from "sonner"
 import { User } from "@prisma/client"
@@ -21,7 +20,7 @@ interface NavbarProps {
 const Navbar = ({ signedInuser }: NavbarProps) => {
    const pathname = usePathname()
    
-   const handleLogout = useCallback(() => {
+   const handleLogout = () => {
 		const promise = logoutAction("/")
 		toast.promise(promise, {
 			loading: 'Logging out...',
@@ -29,7 +28,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
 				return "Logged out successfully!";
 			},
 		})
-	}, [])
+	}
    
    return (
       <div className="sticky top-0 z-[999] bg-white">
