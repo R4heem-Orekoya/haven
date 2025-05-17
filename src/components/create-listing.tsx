@@ -378,7 +378,7 @@ const Header = () => {
             <div className="flex items-center gap-3">
                <Button asChild size="icon" className="rounded-full" variant="outline">
                   <Link href="/dashboard">
-                     <ArrowLeft />
+                     <ArrowLeft className="w-4 h-4"/>
                   </Link>
                </Button>
                <h1 className="text-lg md:text-xl font-semibold">Create a New Listing</h1>
@@ -426,7 +426,7 @@ const Preview = ({ data: { image, category, location, price, sqft, title, baths,
                )}
 
                <Button variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-                  <Bookmark />
+                  <Bookmark className="w-4 h-4"/>
                </Button>
             </div>
             <div className="mt-2">

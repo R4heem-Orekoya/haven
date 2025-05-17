@@ -37,7 +37,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                <Logo className="w-16 h-16 max-sm:w-12 max-sm:h-12" />
             </Link>
 
-            <MobileNav />
+            <MobileNav signedInUser={signedInuser} />
             <div className="hidden md:flex items-center gap-10">
                <nav className="flex items-center gap-6">
                   <Link href="/properties" className={cn("text-sm text-muted-foreground hover:text-primary duration-300", { "text-primary font-semibold": pathname === "/properties" })}>Properties</Link>

@@ -58,7 +58,7 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                </div>
                <div className="flex items-center gap-3">
                   <Button onClick={handleSave} variant="outline" size="icon" className="rounded-3xl">
-                     <Bookmark className={cn({ "fill-primary": isFavorited })} />
+                     <Bookmark className={cn("w-4 h-4", { "fill-primary": isFavorited })} />
                   </Button>
                   <ShareToolTip propertySlug={property.slug} />
                </div>

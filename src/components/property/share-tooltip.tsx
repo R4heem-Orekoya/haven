@@ -27,24 +27,24 @@ export default function ShareToolTip({ propertySlug }: { propertySlug: string })
             <PopoverTrigger asChild>
                <Button variant="outline" className="rounded-3xl">
                   Share
-                  <Forward strokeWidth={1.6} className="text-secondary-foreground"/>
+                  <Forward strokeWidth={1.6} className="w-4 h-4 text-secondary-foreground"/>
                </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-72 mt-2 shadow-sm">
                <div className="flex flex-col gap-3 text-center">
                   <div className="text-sm font-medium">Share Property</div>
                   <div className="flex flex-wrap justify-center gap-2">
-                     <Button size="icon" variant="outline" aria-label="Embed">
-                        <RiCodeFill size={16} strokeWidth={2} aria-hidden="true" />
+                     <Button size="icon"  variant="outline" aria-label="Embed">
+                        <RiCodeFill className="w-4 h-4" size={16} strokeWidth={2} aria-hidden="true" />
                      </Button>
-                     <Button size="icon" variant="outline" aria-label="Share on Twitter">
-                        <RiTwitterXFill size={16} strokeWidth={2} aria-hidden="true" />
+                     <Button size="icon"  variant="outline" aria-label="Share on Twitter">
+                        <RiTwitterXFill className="w-4 h-4" size={16} strokeWidth={2} aria-hidden="true" />
                      </Button>
-                     <Button size="icon" variant="outline" aria-label="Share on Facebook">
-                        <RiFacebookFill size={16} strokeWidth={2} aria-hidden="true" />
+                     <Button size="icon"  variant="outline" aria-label="Share on Facebook">
+                        <RiFacebookFill className="w-4 h-4" size={16} strokeWidth={2} aria-hidden="true" />
                      </Button>
-                     <Button size="icon" variant="outline" aria-label="Share via email">
-                        <RiMailLine size={16} strokeWidth={2} aria-hidden="true" />
+                     <Button size="icon"  variant="outline" aria-label="Share via email">
+                        <RiMailLine className="w-4 h-4" size={16} strokeWidth={2} aria-hidden="true" />
                      </Button>
                   </div>
                   <div className="space-y-2">

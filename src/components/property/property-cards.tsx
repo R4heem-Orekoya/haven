@@ -238,7 +238,7 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
                         e.stopPropagation()
                      }}>
                         <Button variant="secondary" size="icon" className="ml-auto w-8 h-8 hover:bg-secondary">
-                           <MoreVertical />
+                           <MoreVertical className="w-4 h-4"/>
                         </Button>
                      </DropdownMenuTrigger>
                      <DropdownMenuContent

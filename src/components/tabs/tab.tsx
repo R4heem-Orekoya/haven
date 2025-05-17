@@ -61,7 +61,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                   <Button asChild className="ml-auto rounded-3xl hidden sm:flex">
                      <Link href="/dashboard/listing/create" className="flex items-center gap-2">
                         Create a new Listing
-                        <Plus />
+                        <Plus className='w-4 h-4'/>
                      </Link>
                   </Button>
                )}

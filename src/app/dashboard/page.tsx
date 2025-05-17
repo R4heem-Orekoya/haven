@@ -48,7 +48,7 @@ const Page = async () => {
           </div>
           <Button asChild variant="outline" size="sm" className="w-fit rounded-3xl">
             <Link href="/dashboard/account/profile">
-              <UserPen strokeWidth={1.6} className="text-muted-foreground" />
+              <UserPen strokeWidth={1.6} className="w-4 h-4 text-muted-foreground" />
               Edit Profile
             </Link>
           </Button>
