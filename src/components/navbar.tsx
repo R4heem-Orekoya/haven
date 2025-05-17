@@ -31,7 +31,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
 	}
    
    return (
-      <div className="sticky top-0 z-[999] bg-white">
+      <div className="sticky top-0 z-[99] bg-white">
          <header className="h-16 flex justify-between items-center container mx-auto px-4 md:px-6 lg:px-8">
             <Link href="/">
                <Logo className="w-16 h-16 max-sm:w-12 max-sm:h-12" />

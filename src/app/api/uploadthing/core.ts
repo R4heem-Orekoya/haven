@@ -28,7 +28,7 @@ export const ourFileRouter = {
    }),
    profilePictureUploader: f({
       image: {
-         maxFileSize: "1MB",
+         maxFileSize: "2MB",
          maxFileCount: 1,
          minFileCount: 1
       },
