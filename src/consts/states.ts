@@ -35,4 +35,4 @@ export const states = [
    { value: "taraba", label: "Taraba" },
    { value: "yobe", label: "Yobe" },
    { value: "zamfara", label: "Zamfara" },
-];
+] as const

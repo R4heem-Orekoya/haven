@@ -1,3 +1,4 @@
+import { publicRoutes } from "@/routes"
 import { User } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -11,6 +12,17 @@ export const wait = async (duration: number) => {
     setTimeout(() => resolve(), duration)
   })
 }
+
+export function isMatchingPublicRoute(pathname: string) {
+  return publicRoutes.some((route) => {
+    if (route.endsWith("/*")) {
+      const base = route.replace("/*", "")
+      return pathname.startsWith(base)
+    }
+    return pathname === route
+  })
+}
+
 
 export const sluggify = (text: string) => text.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
 

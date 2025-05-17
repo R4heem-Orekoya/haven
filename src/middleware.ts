@@ -1,6 +1,7 @@
 import authConfig from "./auth.config";
 import NextAuth from "next-auth";
 import { DEFAULT_LOGIN_REDIRECT, apiAuthPrefix, authRoutes, publicRoutes } from "@/routes"
+import { isMatchingPublicRoute } from "./lib/utils";
 
 const { auth: middleware } = NextAuth(authConfig)
 
@@ -17,7 +18,7 @@ export default middleware((req) => {
    }
    
    const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
-   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
+   const isPublicRoute = isMatchingPublicRoute(nextUrl.pathname)
    const isAuthRoute = authRoutes.includes(nextUrl.pathname)
    
    if(isApiAuthRoute){

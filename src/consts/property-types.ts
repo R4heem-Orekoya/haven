@@ -19,19 +19,19 @@ export const propertyTypes = [
       value: "commercial",
       label: "Commercial",
    },
-]
+] as const
 
-export const modes: { value: "buy" | "rent" | "shortlet"; label: string }[] = [
+export const categories = [
    {
-      value: "buy",
-      label: "Buy"
+      label: "Sale",
+      value: "sale"
    },
    {
-      value: "rent",
-      label: "Rent"
+      label: "Rent",
+      value: "rent"
    },
    {
-      value: "shortlet",
-      label: "Shortlet"
+      label: "Shortlet",
+      value: "shortlet"
    },
-]
+] as const

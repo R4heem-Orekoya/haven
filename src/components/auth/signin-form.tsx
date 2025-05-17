@@ -51,12 +51,12 @@ const SignInForm = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4">
                <div className="grid gap-2">
                   <Label>Email<span className="text-red-500">*</span></Label>
-                  <Input type="email" {...register("email")} />
+                  <Input type="email" {...register("email")} className="rounded-3xl"/>
                   {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                </div>
                <div className="grid gap-2">
                   <Label>Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" {...register("password")} />
+                  <Input type="password" {...register("password")} className="rounded-3xl"/>
                   {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                </div>
 

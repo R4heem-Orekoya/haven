@@ -14,18 +14,18 @@ import { signupAction } from "@/actions/auth"
 import { useRouter } from "next/navigation"
 import AuthError from "./error"
 import AuthSuccess from "./success"
+import { accountTypes } from "@/consts/account-type"
+import { TAccountType } from "@/types"
 
-const accountTypes = [
-   { id: "r1", value: "individual", label: "Individual (searching for property)" },
-   { id: "r3", value: "property_developer", label: "Property Developer" },
-   { id: "r4", value: "estate_agent", label: "Estate Agent" },
-]
+interface SignUpFormProps {
+   role: TAccountType
+}
 
-const SignUpForm = () => {
+export default function SignUpForm({ role }: SignUpFormProps){
    const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm<TSignUpSchema>({
       resolver: zodResolver(signUpSchema),
       defaultValues: {
-         accountType: "individual",
+         accountType: role ?? "individual",
       },
    })
 
@@ -64,22 +64,22 @@ const SignUpForm = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4">
                <div className="grid gap-2">
                   <Label>Name<span className="text-red-500">*</span></Label>
-                  <Input {...register("name")} />
+                  <Input {...register("name")} className="rounded-3xl"/>
                   {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
                </div>
                <div className="grid gap-2">
                   <Label>Email<span className="text-red-500">*</span></Label>
-                  <Input type="email" {...register("email")} />
+                  <Input type="email" {...register("email")} className="rounded-3xl"/>
                   {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                </div>
                <div className="grid gap-2">
                   <Label>Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" {...register("password")} />
+                  <Input type="password" {...register("password")} className="rounded-3xl"/>
                   {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                </div>
                <div className="grid gap-2">
                   <Label>Confirm Password<span className="text-red-500">*</span></Label>
-                  <Input type="password" {...register("confirmPassword")} />
+                  <Input type="password" {...register("confirmPassword")} className="rounded-3xl"/>
                   {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
                </div>
                <div className="grid gap-2">
@@ -93,7 +93,7 @@ const SignUpForm = () => {
                      className="grid grid-cols-2 gap-3"
                   >
                      {accountTypes.map((type) => (
-                        <Label key={type.id} htmlFor={type.id} className="flex items-center gap-2 rounded-lg border border-input p-3 has-[[data-state=checked]]:border-ring">
+                        <Label key={type.id} htmlFor={type.id} className="flex items-center gap-2 rounded-full border border-input px-2 py-3 has-[[data-state=checked]]:border-ring">
                            <RadioGroupItem
                               id={type.id}
                               value={type.value}
@@ -125,5 +125,3 @@ const SignUpForm = () => {
       </main>
    )
 }
-
-export default SignUpForm

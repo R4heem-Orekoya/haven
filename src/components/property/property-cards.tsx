@@ -65,7 +65,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
                e.stopPropagation()
                handleSave()
             }} variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-               <Bookmark className={cn({ "fill-primary": isFavorited })} />
+               <Bookmark className={cn("w-4 h-4", { "fill-primary": isFavorited })} />
             </Button>
          </div>
          <div className="mt-2">
@@ -140,7 +140,7 @@ export const PropertyFavoriteCard = ({ property }: { property: PropertyWithUser 
                e.stopPropagation()
                handleSave()
             }} variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-               <Bookmark className="fill-primary" />
+               <Bookmark className="w-4 h-4 fill-primary" />
             </Button>
          </div>
          <div className="mt-2">
