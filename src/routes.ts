@@ -11,7 +11,8 @@ export const publicRoutes = [
    "/estate-agents",
    "/estate-agents/*",
    "/property-developers",
-   "/property-developers/*"
+   "/property-developers/*",
+   "/test-ut"
 ]
 
 /**  
