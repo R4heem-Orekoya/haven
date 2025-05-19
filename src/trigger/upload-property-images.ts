@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { utapi } from "@/lib/uploadthing/utils";
-import { schemaTask } from "@trigger.dev/sdk/v3";
+import { logger, schemaTask } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
 
 export const uploadPropertyImages = schemaTask({
@@ -17,6 +17,11 @@ export const uploadPropertyImages = schemaTask({
    run: async (payload) => {
       await Promise.all(
          payload.images.map(async (image) => {
+            
+            if(typeof Buffer === undefined) {
+               throw new Error("Buffer does not exist in this context!")
+            }
+            
             const buffer = Buffer.from(image.content, "base64");
             const file = new File([buffer], image.name, { type: image.type });
             
@@ -46,5 +51,9 @@ export const uploadPropertyImages = schemaTask({
             }
          })
       )
+   },
+   handleError: (_, error) => {
+      //@ts-expect-error unknown
+      logger.error(_,error.message)
    }
 })
