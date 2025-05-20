@@ -12,12 +12,14 @@ import { toast } from "sonner"
 import { User } from "@prisma/client"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { use } from "react"
 
 interface NavbarProps {
-	signedInuser: User | null
+	currentUser: Promise<User | null>
 }
 
-const Navbar = ({ signedInuser }: NavbarProps) => {
+const Navbar = ({ currentUser }: NavbarProps) => {
+   const signedInUser = use(currentUser)
    const pathname = usePathname()
    
    const handleLogout = () => {
@@ -37,7 +39,7 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                <Logo className="w-16 h-16 max-sm:w-12 max-sm:h-12" />
             </Link>
 
-            <MobileNav signedInUser={signedInuser} />
+            <MobileNav signedInUser={signedInUser} />
             <div className="hidden md:flex items-center gap-10">
                <nav className="flex items-center gap-6">
                   <Link href="/properties" className={cn("text-sm text-muted-foreground hover:text-primary duration-300", { "text-primary font-semibold": pathname === "/properties" })}>Properties</Link>
@@ -46,10 +48,10 @@ const Navbar = ({ signedInuser }: NavbarProps) => {
                </nav>
 
                <div className="flex space-x-4">
-                  {signedInuser ? (
+                  {signedInUser ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger className="rounded-full focus:outline-offset-4">
-                           <ProfilePicture image={signedInuser.image} name={signedInuser.name} />
+                           <ProfilePicture image={signedInUser.image} name={signedInUser.name} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[250px] mt-3 border z-[999]">
                            <DropdownMenuLabel>My Account</DropdownMenuLabel>

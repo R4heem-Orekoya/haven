@@ -29,14 +29,14 @@ const openSans = Inter_Tight({
   variable: "--font-open-sans"
 })
 
-export default async function RootLayout({ children }: Readonly<RootLayoutProps>) {
-  const signedInuser = await currentUser()
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
+  const signedInuser = currentUser()
   
   return (
     <html lang="en">
       <SessionProvider>
         <body className={`${montserrat.variable} ${openSans.variable} antialiased font-Montserrat`}>
-          <Navbar signedInuser={signedInuser}/>
+          <Navbar currentUser={signedInuser} />
           {children}
           <Toaster position="top-center" theme="light" richColors className="font-Montserrat"/>
         </body>

@@ -8,7 +8,6 @@ import { Suspense } from "react"
 import { PropertyCardSkeleton } from "@/components/property/property-card-skeleton"
 
 export default function LandingPage() {
-
    return (
       <main className="container mx-auto px-4 md:px-6 lg:px-8">
          <section className="background text-background my-4 rounded-xl pb-12 pt-8 md:pb-16 md:pt-12 lg:py-32 px-6 md:px-8 xl:px-10">
