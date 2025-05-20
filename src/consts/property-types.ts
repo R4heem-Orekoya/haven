@@ -1,9 +1,5 @@
 export const propertyTypes = [
    {
-      value: "all",
-      label: "All",
-   },
-   {
       value: "apartment",
       label: "Flat/apartment",
    },
