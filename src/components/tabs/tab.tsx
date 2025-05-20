@@ -80,7 +80,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                      ))}
                   </div>
                ) : (
-                  <div className='flex flex-col items-center justify-center gap-4'>
+                  <div className='flex flex-col items-center justify-center text-center gap-4'>
                      <Explore className='w-48 h-48'/>
                      <p className='text-2xl xl:text-3xl font-medium mb-2'>You haven&apos;t saved any property!</p>
                      <Link
@@ -104,7 +104,7 @@ export default function Tab({ signedInUser, savedProperties, userProperties }: T
                      ))}
                   </div>
                ) : (
-                  <div className='flex flex-col items-center justify-center gap-4'>
+                  <div className='flex flex-col items-center justify-center text-center gap-4'>
                      <p className='text-2xl xl:text-3xl font-medium'>You haven&apos;t saved any property!</p>
                      <Link
                         href="/dashboard/listing/create"
