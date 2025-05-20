@@ -21,7 +21,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
             router.push(link)
          }}
          key={agent.id}
-         className="p-4 border rounded-lg flex justify-between items-start mb-4 cursor-pointer"
+         className="p-3 sm:p-4 border rounded-lg flex justify-between items-start mb-4 cursor-pointer"
       >
          <div className="flex items-center gap-4">
             <ProfilePicture
@@ -45,7 +45,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
                href={agent.personalWebsiteUrl.startsWith("http") ? agent.personalWebsiteUrl : `https://${agent.personalWebsiteUrl}`}
                target="_blank"
                rel="noopener noreferrer"
-               className="text-sm text-blue-600 hover:underline mt-1 inline-block"
+               className="text-xs sm:text-sm text-blue-600 hover:underline mt-1 inline-block"
             >
                Visit Website
             </a>
