@@ -11,7 +11,7 @@ export default function LandingPage() {
    return (
       <main className="container mx-auto px-4 md:px-6 lg:px-8">
          <section className="background text-background my-4 rounded-xl pb-12 pt-8 md:pb-16 md:pt-12 lg:py-32 px-6 md:px-8 xl:px-10">
-            <div className="max-w-3xl mx-auto text-left md:text-center space-y-6">
+            <div className="max-w-3xl mx-auto text-center space-y-6">
                <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-[3.3rem] text-balance font-semibold">
                   Journey To Your Dream Property
                </h1>
