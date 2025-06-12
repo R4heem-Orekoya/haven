@@ -202,8 +202,8 @@ export async function updatePropertyListing({ formData, propertyId }: { formData
          state: formData.get("state"),
          city: formData.get("city"),
          amenities: formData.get("amenities"),
-         baths: Number(formData.get("baths")),
-         beds: Number(formData.get("beds")),
+         baths: formData.get("baths"),
+         beds: formData.get("beds"),
          sqft: Number(formData.get("sqft")),
       })
 

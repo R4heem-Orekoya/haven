@@ -59,8 +59,8 @@ export default function EditListing({ initialData }: EditListingProps) {
       const hasChanged =
          (formState.address !== initialData.location) ||
          (formState.amenities !== initialData.amenities) ||
-         (formState.baths !== initialData.baths) ||
-         (formState.beds !== initialData.beds) ||
+         (formState.baths ?? null) !== (initialData.baths ?? null) ||
+         (formState.beds ?? null) !== (initialData.beds ?? null) ||
          (formState.category !== initialData.category) ||
          (formState.description !== initialData.description) ||
          (formState.price !== initialData.price) ||
@@ -71,7 +71,7 @@ export default function EditListing({ initialData }: EditListingProps) {
          (imagesToUpload.length > 0)
 
       setIsDisabled(!hasChanged);
-   }, [formState, initialData, imagesToUpload.length])
+   }, [formState, initialData, imagesToUpload])
 
    const removeInitialImage = async (id: string) => {
       if (images.length + imagesToUpload.length <= 5) {
@@ -133,18 +133,16 @@ export default function EditListing({ initialData }: EditListingProps) {
       const updatePropertyPromise = updatePropertyListing({ formData, propertyId: initialData.id })
       const uploadImagesPromise = uploadImages({ files: imagesToUpload, propertyId: initialData.id })
 
-      const [res1, res2] = await Promise.all([updatePropertyPromise, imagesToUpload.length > 0 && uploadImagesPromise])
-
-      console.log(res2);
+      const [res1] = await Promise.all([updatePropertyPromise, imagesToUpload.length > 0 && uploadImagesPromise])
 
       if (res1.error) {
          toast.error(res1.error)
-         setIsSubmitting(true)
+         setIsSubmitting(false)
       }
 
       if (res1.success) {
          toast.success(res1.success)
-         setIsSubmitting(true)
+         setIsSubmitting(false)
          router.push(`/properties/${initialData.id}`)
       }
    }
@@ -298,7 +296,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                                  id="beds"
                                  type="number"
                                  {...form.register("beds", {
-                                    setValueAs: (v) => v === "" ? 0 : Number(v),
+                                    setValueAs: (v) => v === "" ? 0 : String(v),
                                  })}
                               />
                               <p className="mt-2 text-xs text-destructive">
@@ -312,7 +310,7 @@ export default function EditListing({ initialData }: EditListingProps) {
                                  id="baths"
                                  type="number"
                                  {...form.register("baths", {
-                                    setValueAs: (v) => v === "" ? 0 : Number(v),
+                                    setValueAs: (v) => v === "" ? 0 : String(v),
                                  })}
                               />
                               <p className="mt-2 text-xs text-destructive">
@@ -412,14 +410,14 @@ export default function EditListing({ initialData }: EditListingProps) {
 
                {/* Form Actions */}
                <div className="flex justify-end gap-4">
-                  <Button
+                  {/* <Button
                      disabled={isSubmitting || isDisabled}
                      type="button"
                      variant="outline"
                      onClick={() => { }}
                   >
                      Save as Draft
-                  </Button>
+                  </Button> */}
                   <Button
                      disabled={isSubmitting || isDisabled}
                      type="submit"
@@ -458,7 +456,7 @@ const Header = () => {
             <div className="flex items-center gap-3">
                <Button asChild size="icon" className="rounded-full" variant="outline">
                   <Link href="/dashboard">
-                     <ArrowLeft className="w-4 h-4"/>
+                     <ArrowLeft className="w-4 h-4" />
                   </Link>
                </Button>
                <h1 className="text-lg md:text-xl font-semibold">Edit Property</h1>
@@ -506,7 +504,7 @@ const Preview = ({ data: { image, category, location, price, sqft, title, baths,
                )}
 
                <Button variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-                  <Bookmark className="w-4 h-4"/>
+                  <Bookmark className="w-4 h-4" />
                </Button>
             </div>
             <div className="mt-2">

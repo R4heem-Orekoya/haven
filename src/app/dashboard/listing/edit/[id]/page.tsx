@@ -18,8 +18,7 @@ export default async function Page({ params }: Props) {
    
    const propertyId = (await params).id
    
-   console.log(propertyId);
-   
+   console.log(propertyId)
    
    const property = await db.property.findUnique({
       where: {

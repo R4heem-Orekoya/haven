@@ -10,6 +10,7 @@ import Link from "next/link"
 import { savePropertyAction } from "@/actions/property"
 import { toast } from "sonner"
 import { useState } from "react"
+import { TAccountType } from "@/types"
 
 
 interface PropertyCarouselProps {
@@ -29,6 +30,12 @@ const category = [
    { value: "shortlet", icon: <Calendar strokeWidth={1.6} className="w-4 h-4 sm:w-5 sm:h-5" /> },
 ]
 
+const propertyAgentPaths: Record<TAccountType, string> = {
+   individual: "individual",
+   estate_agent: "estate-agents",
+   property_developer: "property-developers"
+}
+
 const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
    const [isFavorited, setIsFavorited] = useState(() =>
       signedInUser && property.favoredByUsers.some(user => user.id === signedInUser.id)
@@ -38,7 +45,7 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
 
    const handleSave = async () => {
       setIsFavorited((prev) => !prev);
-      
+
       const res = await savePropertyAction(property.id);
 
       if (res.error) {
@@ -51,7 +58,8 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
    };
 
    const isVerified = isUserVerified(property.user)
-   
+   const propertyAgentPath = propertyAgentPaths[property.user.accountType]
+
    return (
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 mt-6 w-full">
          <div className="col-span-1 lg:col-span-5 rounded-lg py-4 space-y-6">
@@ -172,7 +180,7 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                />
                <Link
                   className="font-medium flex items-center gap-1"
-                  href={`/${property.user.accountType}s/${property.user.id}`}
+                  href={`/${propertyAgentPath}/${property.user.id}`}
                >
                   {property.user.name}
                   {isVerified && (

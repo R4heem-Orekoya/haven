@@ -79,13 +79,15 @@ export const updatePropertySchema = z.object({
    state: z.string().nonempty("State is required"),
    address: z.string().nonempty("Address is required"),
    category: z.enum(["rent", "sale", "shortlet"]),
-   beds: z.number()
+   beds: z.string()
       .optional()
       .nullable()
+      .transform((val) => (val ? Number(val) : undefined))
       .pipe(z.number().positive().optional()),
-   baths: z.number()
+   baths: z.string()
       .optional()
       .nullable()
+      .transform((val) => (val ? Number(val) : undefined))
       .pipe(z.number().positive().optional()),
    sqft: z.number()
       .pipe(z.number().positive("Square footage must be greater than 0")),
@@ -121,5 +123,5 @@ export const updatePropertySchema = z.object({
       }
    })
 
-export type TupdatePropertySchema= z.infer<typeof updatePropertySchema>
+export type TupdatePropertySchema = z.infer<typeof updatePropertySchema>
 export type TPropertySchema = z.infer<typeof propertySchema>
