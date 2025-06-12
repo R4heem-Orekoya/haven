@@ -110,7 +110,6 @@ model VerificationToken {
 enum AccountType {
   individual
   estate_agent
-  property_owner
   property_developer
 }
 

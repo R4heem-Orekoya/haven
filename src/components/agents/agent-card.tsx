@@ -2,7 +2,7 @@
 
 import { User } from "@prisma/client"
 import ProfilePicture from "../profile-picture"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 import { isUserVerified } from "@/lib/utils"
 import { BadgeCheck } from "lucide-react"
 

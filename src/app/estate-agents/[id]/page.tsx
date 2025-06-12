@@ -1,11 +1,25 @@
 import AgentDetails from "@/components/agents/agent-details"
 import { AgentDetailsSkeleton } from "@/components/agents/agent-details-skeleton"
+import { db } from "@/lib/db"
 import { Suspense } from "react"
 
 interface Props {
    params: Promise<{
       id: string
    }>
+}
+
+export async function generateStaticParams() {
+   const users = await db.user.findMany({
+      where: {
+         accountType: "estate_agent"
+      },
+      select: {
+         id: true
+      },
+      take: 100
+   })
+   return users
 }
 
 export default async function Page({ params }: Props) {

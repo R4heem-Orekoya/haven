@@ -20,7 +20,7 @@ import { states } from "@/consts/states"
 import { deleteImage, uploadImages } from "@/actions/image"
 import { toast } from "sonner"
 import { updatePropertyListing } from "@/actions/property"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 
 interface EditListingProps {
    initialData: PropertyWithImage

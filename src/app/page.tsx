@@ -23,7 +23,7 @@ export default function LandingPage() {
             </div>
          </section>
 
-         <section className="py-8 lg:py-12 xl:py-16 px-4 lg:px-8">
+         <section className="py-8 lg:py-12 xl:py-16 lg:px-8">
             <div className="flex max-sm:flex-wrap justify-between items-center gap-4 md:gap-8">
                <Heading>
                   Discover Your Perfect Property Match

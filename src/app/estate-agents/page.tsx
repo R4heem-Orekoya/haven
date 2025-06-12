@@ -17,7 +17,7 @@ export default async function Page() {
    })
    
    return (
-      <main className="container mx-auto px-4 md:px-6 lg:px-8">
+      <main className="container mx-auto md:px-6 lg:px-8">
          <div className="max-w-2xl mx-auto p-4 my-12">
             <h1 className="text-2xl font-bold mb-8">Estate Agents</h1>
 

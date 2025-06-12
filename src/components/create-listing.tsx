@@ -17,7 +17,7 @@ import Image from "next/image"
 import PlaceHolderImage from "../../public/placeholder.svg"
 import { createNewPropertyListing } from "@/actions/property"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 import { Badge } from "./ui/badge"
 
 export const CreateListing = () => {

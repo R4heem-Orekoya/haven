@@ -10,6 +10,16 @@ interface Props {
    }>
 }
 
+export async function generateStaticParams() {
+   const properties = await db.property.findMany({
+      select: {
+         id: true
+      },
+      take: 100
+   })
+   return properties
+}
+
 const Page = async ({ params }: Props) => {
    const signedInUser = await currentUser()
    const id = (await params).id

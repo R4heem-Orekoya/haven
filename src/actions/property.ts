@@ -8,7 +8,7 @@ import { deleteFiles } from "@/trigger/delete-files"
 import { uploadPropertyImages } from "@/trigger/upload-property-images"
 import { ImageStatus } from "@prisma/client"
 import { tasks } from "@trigger.dev/sdk/v3";
-import { revalidateTag } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 
 export const createNewPropertyListing = async (formData: FormData) => {
    try {
@@ -159,6 +159,8 @@ export async function deletePropertyListing(propertyId: string) {
       return {
          error: "Failed to delete property listing. Please try again."
       };
+   }finally {
+      revalidatePath(`/properties/${propertyId}`)
    }
 }
 
@@ -242,6 +244,8 @@ export async function updatePropertyListing({ formData, propertyId }: { formData
       return {
          error: "Something went wrong. Please try again.",
       };
+   }finally {
+      revalidatePath(`/properties/${propertyId}`)
    }
 }
 
@@ -300,6 +304,8 @@ export async function togglePropoertyStatus(propertyId: string) {
       return {
          error: "Failed to toggle property status."
       };
+   }finally {
+      revalidatePath(`/properties/${propertyId}`)
    }
 }
 
@@ -341,5 +347,7 @@ export async function savePropertyAction(propertyId: string) {
       return {
          error: "Something went wrong. Please try again.",
       };
+   }finally {
+      revalidatePath(`/properties/${propertyId}`)
    }
 }

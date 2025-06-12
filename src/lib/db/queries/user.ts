@@ -1,7 +1,10 @@
 import { auth } from "@/auth"
 import { db } from ".."
+import { cache } from "react"
+import { redis } from "@/lib/redis"
+import { User } from "@prisma/client"
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = cache(async (email: string) => {
    try {
       const user = await db.user.findUnique({
          where: {
@@ -14,9 +17,9 @@ export const getUserByEmail = async (email: string) => {
       console.log(err);
       return null
    }
-}
+})
 
-export const getUserById = async (id: string) => {
+export const getUserById = cache(async (id: string) => {
    try {
       const user = await db.user.findUnique({
          where: {
@@ -29,42 +32,24 @@ export const getUserById = async (id: string) => {
       console.log(err);
       return null
    }
-}
+})
 
-export const getUsers = async () => {
-   const session = await auth()
-   
-   if(!session?.user) return []
-   
-   try {
-      const users = await db.user.findMany({
-         orderBy: {
-            createdAt: "desc"
-         },
-         where: {
-            NOT: {
-               id: session.user.id
-            }
-         },
-      })
-      
-      return users
-   } catch (error) {
-      console.log(error);
-      return []
-   }
-}
-
-export const currentUser = async () => {
+export const currentUser = cache(async () => {
    const session = await auth()
    if (!session?.user) return null
    
    try {
-      const user = await getUserById(session.user.id as string)
+      const redisUser = await redis.get(`user:${session.user.id}`)
+      console.log(redisUser);
+      
+      if(redisUser) return redisUser as User
+      
+      const user = await getUserById(session.user.id as string) 
+      redis.set(`user:${session.user.id}`, JSON.stringify(user), { ex: 3600 })
       
       return user
    } catch (error) {
       console.log(error);
       return null
    }
-}
+})

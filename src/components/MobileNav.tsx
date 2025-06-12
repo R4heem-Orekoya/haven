@@ -63,7 +63,7 @@ export default function MobileNav({ signedInUser }: MobileNavProps) {
                   </DropdownMenuItem>
                </DropdownMenuContent>
             </DropdownMenu>
-         ): (
+         ) : (
             <>
                <button onClick={() => setIsOpen(prev => !prev)}>
                   {isOpen ? <X /> : <AlignJustify />}
@@ -79,8 +79,16 @@ export default function MobileNav({ signedInUser }: MobileNavProps) {
                         </nav>
 
                         <div className="mt-8 space-y-4 flex flex-col">
-                           <Button className="flex-1">Register</Button>
-                           <Button className="flex-1" variant="outline">Login</Button>
+                           <Button className="flex-1" asChild>
+                              <Link href="/register">
+                                 Register
+                              </Link>
+                           </Button>
+                           <Button className="flex-1" variant="outline">
+                              <Link href="/sign-in">
+                                 Login
+                              </Link>
+                           </Button>
                         </div>
                      </div>
                   </div>

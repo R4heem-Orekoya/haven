@@ -5,7 +5,7 @@ import { categories, propertyTypes } from "@/consts/property-types"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { states } from "@/consts/states"
 import { Button } from "./ui/button"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 import { useState } from "react"
 
 type TpropertyType = typeof propertyTypes[number]["value"] | "" 

@@ -6,13 +6,12 @@ import { Bath, Bed, Bookmark, Edit, Loader2, MoreVertical, Pen, Ruler, Trash2 } 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { useState } from "react"
+import { useOptimistic, useState } from "react"
 import { User } from "@prisma/client"
 import { deletePropertyListing, savePropertyAction, togglePropoertyStatus } from "@/actions/property"
 import { toast } from "sonner"
 import { PropertyWithFavoritesAndImages, PropertyWithImage, PropertyWithUser } from "@/types/property"
-import { useRouter } from "next/navigation"
-import { currentUser } from "@/lib/db/queries/user"
+import { useRouter } from 'nextjs-toploader/app';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
 
 interface PropertyCardProps {
@@ -27,12 +26,15 @@ interface PropertyListingCardProps {
 
 export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
    const [isFavorited, setIsFavorited] = useState(() =>
-      signedInUser && property.favoredByUsers?.some(user => user.id === signedInUser.id)
+      signedInUser ? property.favoredByUsers?.some(user => user.id === signedInUser.id) : false
    );
+   const [optimisticIsFavorited, toggleOptimisticFavorite] = useOptimistic(isFavorited);
    const router = useRouter()
 
    const handleSave = async () => {
-      if (!currentUser) router.push("/sign-in")
+      if (!signedInUser) router.push("/sign-in")
+         
+      toggleOptimisticFavorite(prev => !prev)
 
       const res = await savePropertyAction(property.id);
 
@@ -65,7 +67,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
                e.stopPropagation()
                handleSave()
             }} variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-               <Bookmark className={cn("w-4 h-4", { "fill-primary": isFavorited })} />
+               <Bookmark className={cn("w-4 h-4", { "fill-primary": optimisticIsFavorited })} />
             </Button>
          </div>
          <div className="mt-2">
@@ -238,7 +240,7 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
                         e.stopPropagation()
                      }}>
                         <Button variant="secondary" size="icon" className="ml-auto w-8 h-8 hover:bg-secondary">
-                           <MoreVertical className="w-4 h-4"/>
+                           <MoreVertical className="w-4 h-4" />
                         </Button>
                      </DropdownMenuTrigger>
                      <DropdownMenuContent
@@ -336,11 +338,11 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
                </AlertDialogHeader>
                <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <Button 
-                     variant="destructive" 
+                  <Button
+                     variant="destructive"
                      className="flex items-center gap-2"
                      disabled={isDeleting}
-                     onClick={async() => {
+                     onClick={async () => {
                         setIsDeleting(true)
                         await handleDelete(property.id)
                         setIsDeleting(false)
@@ -348,7 +350,7 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
                      }}
                   >
                      Delete
-                     {isDeleting && <Loader2 className="w-4 h-4 animate-spin"/>}
+                     {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
                   </Button>
                </AlertDialogFooter>
             </AlertDialogContent>

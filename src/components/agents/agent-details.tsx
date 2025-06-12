@@ -17,7 +17,7 @@ export default async function AgentDetails({ id }: AgentDetailsProps) {
    const propertyDeveloper = await db.user.findUnique({
       where: {
          id,
-      },
+      }
    })
 
    if (

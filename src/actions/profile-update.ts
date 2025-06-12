@@ -3,10 +3,9 @@
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/db/queries/user";
 import { changePasswordSchema, TChangePasswordSchema, TUpdateProfileSchema, updateProfileSchema } from "@/lib/validators/update-profile-schema";
+import { TAccountType } from "@/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
-
-type TAccountType = "individual" | "estate_agent" | "property_owner" | "property_developer"
 
 export const updateProfileAction = async (data: TUpdateProfileSchema) => {
    const signedInUser = await currentUser()
@@ -38,6 +37,7 @@ export const updateProfileAction = async (data: TUpdateProfileSchema) => {
    })
    
    revalidatePath("/dashboard/account/profile")
+   revalidatePath(`/estate-agents/${signedInUser.id}`)
    
    return { success: "Profile updated successfully!" }
 }
@@ -102,6 +102,7 @@ export const updateAccountTypeAction = async ({ accountType, accountVisibility }
    })
    
    revalidatePath("/dashboard/account/account-type")
+   revalidatePath(`/estate-agents/${signedInUser.id}`)
    
    return { success: "Account updated successfully!" }
 }

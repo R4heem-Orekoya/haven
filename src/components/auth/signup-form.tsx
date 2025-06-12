@@ -11,7 +11,7 @@ import { signUpSchema, TSignUpSchema } from "@/lib/validators/auth-schema"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { signupAction } from "@/actions/auth"
-import { useRouter } from "next/navigation"
+import { useRouter } from 'nextjs-toploader/app';
 import AuthError from "./error"
 import AuthSuccess from "./success"
 import { accountTypes } from "@/consts/account-type"

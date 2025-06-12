@@ -1,10 +1,11 @@
 import EditAccountType from "@/components/edit-account-type";
 import { currentUser } from "@/lib/db/queries/user";
+import { User } from "@prisma/client";
 
-const Page = async () => {
-   const signedInUser = await currentUser()
+const Page = () => {
+   const signedInUser = currentUser()
    
-   return <EditAccountType signedInUser={signedInUser!}/>
+   return <EditAccountType signedInUserPromise={signedInUser as Promise<User>} />
 }
 
 export default Page

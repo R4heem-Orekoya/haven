@@ -5,14 +5,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { User } from "@prisma/client";
 import { Button } from "./ui/button";
 import AuthInfo from "./auth/info";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { updateAccountTypeAction } from "@/actions/profile-update";
 import { toast } from "sonner";
 import { Checkbox } from "./ui/checkbox";
+import { TAccountType } from "@/types";
 
 interface EditAccountTypeProps {
-   signedInUser: User;
+   signedInUserPromise: Promise<User>;
 }
 
 const accountTypes = [
@@ -36,7 +37,9 @@ const accountTypes = [
    }
 ];
 
-const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
+const EditAccountType = ({ signedInUserPromise }: EditAccountTypeProps) => {
+   const signedInUser = use(signedInUserPromise)
+   
    const [selectedAccountType, setSelectedAccountType] = useState(signedInUser?.accountType);
    const [accountVisibility, setAccountVisibility] = useState(signedInUser?.accountVisibility);
    const [isSubmitting, setIsSubmitting] = useState(false)
@@ -74,7 +77,7 @@ const EditAccountType = ({ signedInUser }: EditAccountTypeProps) => {
       <div className="space-y-6">
          <RadioGroup 
             className="gap-2" value={selectedAccountType}
-            onValueChange={(value: "individual" | "estate_agent" | "property_owner" | "property_developer") => setSelectedAccountType(value)}
+            onValueChange={(value: TAccountType) => setSelectedAccountType(value)}
          >
             {accountTypes.map((type) => (
                <div key={type.id} className="relative flex w-full items-start gap-2 rounded-lg border border-input p-4 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring">
