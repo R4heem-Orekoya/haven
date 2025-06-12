@@ -25,7 +25,7 @@ interface PropertyListingCardProps {
 }
 
 export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
-   const [isFavorited] = useState(() =>
+   const [isFavorited, setIsFavorited] = useState(() =>
       signedInUser ? property.favoredByUsers?.some(user => user.id === signedInUser.id) : false
    );
    const [optimisticIsFavorited, toggleOptimisticFavorite] = useOptimistic(isFavorited);
@@ -40,6 +40,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
 
       if (res.error) toast.error(res.error);
       if (res.success) {
+         setIsFavorited(true)
          toast.success(res.success);
          router.refresh()
       }
