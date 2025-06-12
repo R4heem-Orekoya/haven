@@ -147,12 +147,14 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                   Disclaimer
                </h3>
                <p className="max-sm:text-sm mt-1">
-                  The information displayed about this property comprises a property advertisement.
-                  Haven makes no warranty as to the accuracy or completeness of the advertisement
-                  or any linked or associated information, and Haven Centre has no control over the content.
-                  This property listing does not constitute property particulars.The information is provided
-                  and maintained by property-developer-name. Haven shall not in any way be held
-                  liable for the actions of any agent and/or property owner/landlord on or off this website.
+                  {
+                     `The information displayed about this property comprises a property advertisement.
+                     Haven makes no warranty as to the accuracy or completeness of the advertisement
+                     or any linked or associated information, and Haven Centre has no control over the content.
+                     This property listing does not constitute property particulars.The information is provided
+                     and maintained by ${property.user.name}. Haven shall not in any way be held
+                     liable for the actions of any agent and/or property owner/landlord on or off this website.`
+                  }
                </p>
             </div>
          </div>
