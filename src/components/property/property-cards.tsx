@@ -40,11 +40,11 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
 
       if (res.error) toast.error(res.error);
       if (res.success) {
-         setIsFavorited(true)
+         setIsFavorited(prev => !prev)
          toast.success(res.success);
          router.refresh()
       }
-   };
+   }
 
    return (
       <div
