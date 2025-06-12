@@ -341,6 +341,7 @@ export async function savePropertyAction(propertyId: string) {
          success: alreadySaved
             ? "Property removed from favorites!"
             : "Property added to favorites!",
+         alreadySaved
       };
    } catch (error) {
       console.error("Failed to save/unsave property:", error);

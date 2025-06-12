@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
 
    const property = await db.property.findFirst({
       where: {
-         id: id
+         id
       },
       include: {
          images: {

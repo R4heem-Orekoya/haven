@@ -40,7 +40,6 @@ export const currentUser = cache(async () => {
    
    try {
       const redisUser = await redis.get(`user:${session.user.id}`)
-      console.log(redisUser);
       
       if(redisUser) return redisUser as User
       

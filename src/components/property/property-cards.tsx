@@ -6,7 +6,7 @@ import { Bath, Bed, Bookmark, Edit, Loader2, MoreVertical, Pen, Ruler, Trash2 } 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { useOptimistic, useState } from "react"
+import { useState } from "react"
 import { User } from "@prisma/client"
 import { deletePropertyListing, savePropertyAction, togglePropoertyStatus } from "@/actions/property"
 import { toast } from "sonner"
@@ -27,22 +27,22 @@ interface PropertyListingCardProps {
 export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
    const [isFavorited, setIsFavorited] = useState(() =>
       signedInUser ? property.favoredByUsers?.some(user => user.id === signedInUser.id) : false
-   );
-   const [optimisticIsFavorited, toggleOptimisticFavorite] = useOptimistic(isFavorited);
+   )
    const router = useRouter()
 
    const handleSave = async () => {
       if (!signedInUser) router.push("/sign-in")
          
-      toggleOptimisticFavorite(prev => !prev)
+      setIsFavorited(prev => !prev)
 
       const res = await savePropertyAction(property.id);
 
-      if (res.error) toast.error(res.error);
-      if (res.success) {
+      if (res.error) {
          setIsFavorited(prev => !prev)
+         toast.error(res.error);
+      }
+      if (res.success) {
          toast.success(res.success);
-         router.refresh()
       }
    }
 
@@ -67,7 +67,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
                e.stopPropagation()
                handleSave()
             }} variant="secondary" size="icon" className="w-8 h-8 absolute top-4 right-4 rounded-3xl">
-               <Bookmark className={cn("w-4 h-4", { "fill-primary": optimisticIsFavorited })} />
+               <Bookmark className={cn("w-4 h-4", { "fill-primary": isFavorited })} />
             </Button>
          </div>
          <div className="mt-2">

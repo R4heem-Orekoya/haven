@@ -37,12 +37,16 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
    const amenities = property.amenities.split(",").map((item) => item.trim())
 
    const handleSave = async () => {
+      setIsFavorited((prev) => !prev);
+      
       const res = await savePropertyAction(property.id);
 
-      if (res.error) toast.error(res.error);
+      if (res.error) {
+         setIsFavorited(prev => !prev)
+         toast.error(res.error);
+      }
       if (res.success) {
          toast.success(res.success);
-         setIsFavorited((prev) => !prev);
       }
    };
 
