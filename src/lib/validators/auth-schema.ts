@@ -5,7 +5,7 @@ export const signUpSchema = z.object({
   email: z.string().min(1, { message: "This field cannot be empty!" }).email({ message: "Please enter a valid email address!" }),
   password: z.string().min(8, { message: "Password should be atleast 8 characters long!" }),
   confirmPassword: z.string(),
-  accountType: z.enum(["individual", "property_owner", "property_developer", "estate_agent"])
+  accountType: z.enum(["individual", "property_developer", "estate_agent"])
 })
    .refine((data) => {
       if(!data.confirmPassword) {
