@@ -166,7 +166,7 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                />
                <Link
                   className="font-medium flex items-center gap-1"
-                  href={`/${property.user.accountType}s/${sluggify(property.user.name!)}`}
+                  href={`/${property.user.accountType}s/${property.user.id}`}
                >
                   {property.user.name}
                   {isVerified && (
