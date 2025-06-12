@@ -25,7 +25,7 @@ interface PropertyListingCardProps {
 }
 
 export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
-   const [isFavorited, setIsFavorited] = useState(() =>
+   const [isFavorited] = useState(() =>
       signedInUser ? property.favoredByUsers?.some(user => user.id === signedInUser.id) : false
    );
    const [optimisticIsFavorited, toggleOptimisticFavorite] = useOptimistic(isFavorited);
