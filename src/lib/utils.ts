@@ -69,7 +69,7 @@ export function formatPrice(price: number | string, options: {
     currency,
     notation,
     currencySign: "standard",
-    maximumFractionDigits: 0
+    maximumFractionDigits: 1
   }).format(numericPrice)
 
   if (currency === 'NGN') {
