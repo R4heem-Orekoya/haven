@@ -113,7 +113,6 @@ const PropertyDetails = ({ property, signedInUser }: PropertyCarouselProps) => {
                <h2 className="text-xl md:text-2xl font-semibold">Description</h2>
                <p className="sm:text-lg text-muted-foreground font-medium mt-2">
                   {property.description}
-                  {property.description}
                </p>
             </div>
             {amenities.length > 0 && (
