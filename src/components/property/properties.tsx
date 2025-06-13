@@ -48,6 +48,9 @@ export default async function Properties({ filterParams:{ category, page, proper
          favoredByUsers: true,
          user: true
       },
+      orderBy: {
+         createdAt: "desc"
+      },
       take: PAGINATIONITEMSTODISPLAY,
       skip: (page - 1) * PAGINATIONITEMSTODISPLAY
    })
