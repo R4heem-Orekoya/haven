@@ -56,7 +56,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
       >
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg border">
             <Image
-               src={property.images[0].url ?? PlaceholderImage}
+               src={property.images[0].status === "processing" ? PlaceholderImage : property.images[0].url}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -131,7 +131,7 @@ export const PropertyFavoriteCard = ({ property }: { property: PropertyWithUser 
       >
          <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
             <Image
-               src={property.images[0].url ?? PlaceholderImage}
+               src={property.images[0].status === "processing" ? PlaceholderImage : property.images[0].url}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -224,7 +224,7 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
          >
             <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
                <Image
-                  src={property.images[0].url ?? PlaceholderImage}
+                  src={property.images[0].status === "processing" ? PlaceholderImage : property.images[0].url}
                   alt={property.title + "thumbnail image"}
                   fill
                   className="object-cover"
