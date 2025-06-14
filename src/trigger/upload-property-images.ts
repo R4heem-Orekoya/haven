@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { resetCache } from "@/lib/redis";
 import { utapi } from "@/lib/uploadthing/utils";
 import { logger, schemaTask } from "@trigger.dev/sdk/v3";
 import { z } from "zod";
@@ -51,6 +52,8 @@ export const uploadPropertyImages = schemaTask({
             }
          })
       )
+      
+      await resetCache()
    },
    handleError: (_, error) => {
       //@ts-expect-error unknown
