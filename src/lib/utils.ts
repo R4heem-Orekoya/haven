@@ -1,4 +1,5 @@
 import { publicRoutes } from "@/routes"
+import { FilterOptions } from "@/types"
 import { User } from "@prisma/client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -22,7 +23,6 @@ export function isMatchingPublicRoute(pathname: string) {
     return pathname === route
   })
 }
-
 
 export const sluggify = (text: string) => text.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
 
@@ -69,7 +69,7 @@ export function formatPrice(price: number | string, options: {
     currency,
     notation,
     currencySign: "standard",
-    maximumFractionDigits: 1
+    maximumFractionDigits: 0
   }).format(numericPrice)
 
   if (currency === 'NGN') {
@@ -150,4 +150,20 @@ export function isUserVerified(user: User) {
     !!user.personalWebsiteUrl &&
     !!user.phoneNumber
   )
+}
+
+export function getRedisPropertyFilterKey({
+  filterOptions, page }:
+  { filterOptions: FilterOptions, page: number }
+) {
+  // Merge the array of single-key objects into one unified object
+  const merged = Object.assign({}, ...filterOptions)
+
+  const type = merged.type?.toLowerCase() ?? 'any'
+  const category = merged.category?.toLowerCase() ?? 'any'
+  const state = merged.state
+    ? merged.state.toLowerCase().replace(/\s+/g, '-')
+    : 'any'
+
+  return `properties:filter:${type}:${category}:${state}:page:${page}`
 }

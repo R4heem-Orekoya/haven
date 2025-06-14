@@ -13,6 +13,7 @@ import { toast } from "sonner"
 import { PropertyWithFavoritesAndImages, PropertyWithImage, PropertyWithUser } from "@/types/property"
 import { useRouter } from 'nextjs-toploader/app';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
+import PlaceholderImage from "../../../public/placeholder.svg"
 
 interface PropertyCardProps {
    property: PropertyWithFavoritesAndImages;
@@ -55,7 +56,7 @@ export const PropertyCard = ({ property, signedInUser }: PropertyCardProps) => {
       >
          <div className="relative aspect-[16/10] overflow-hidden rounded-lg border">
             <Image
-               src={property.images[0].url!}
+               src={property.images[0].url ?? PlaceholderImage}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -130,7 +131,7 @@ export const PropertyFavoriteCard = ({ property }: { property: PropertyWithUser 
       >
          <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
             <Image
-               src={property.images[0].url!}
+               src={property.images[0].url ?? PlaceholderImage}
                alt={property.title + "thumbnail image"}
                fill
                className="object-cover"
@@ -223,7 +224,7 @@ export const PropertyListingCard = ({ property }: PropertyListingCardProps) => {
          >
             <div className="relative aspect-[16/10] overflow-hidden border rounded-lg">
                <Image
-                  src={property.images[0].url!}
+                  src={property.images[0].url ?? PlaceholderImage}
                   alt={property.title + "thumbnail image"}
                   fill
                   className="object-cover"
