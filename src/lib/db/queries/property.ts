@@ -30,7 +30,7 @@ export async function getHeroProperties() {
       take: 4
    })
 
-   await redis.set("properties:hero", JSON.stringify(properties))
+   await redis.set("properties:hero", JSON.stringify(properties), { ex: 18000 })
 
    return properties
 }
@@ -66,7 +66,7 @@ export async function getPropertiesWithFilter({ filterOptions, page }: getProper
          skip: (page - 1) * PAGINATIONITEMSTODISPLAY
       })
 
-      await redis.set(`properties:all:${page}`, JSON.stringify(properties))
+      await redis.set(`properties:all:${page}`, JSON.stringify(properties), { ex: 18000 })
 
       return properties
    }
@@ -103,7 +103,7 @@ export async function getPropertiesWithFilter({ filterOptions, page }: getProper
       skip: (page - 1) * PAGINATIONITEMSTODISPLAY
    })
 
-   await redis.set(cacheKey, JSON.stringify(properties))
+   await redis.set(cacheKey, JSON.stringify(properties), { ex: 18000 })
 
    return properties
 }

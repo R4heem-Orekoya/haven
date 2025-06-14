@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db"
 import { currentUser } from "@/lib/db/queries/user"
+import { resetCache } from "@/lib/redis"
 import { sluggify } from "@/lib/utils"
 import { propertySchema, updatePropertySchema } from "@/lib/validators/property-schema"
 import { deleteFiles } from "@/trigger/delete-files"
@@ -94,6 +95,7 @@ export const createNewPropertyListing = async (formData: FormData) => {
       });
 
       revalidateTag("get_proerty_count")
+      await resetCache()
 
       return { success: "Property created. Uploading images in background...", id: property.id }
    } catch (error) {
@@ -151,9 +153,10 @@ export async function deletePropertyListing(propertyId: string) {
       await tasks.trigger<typeof deleteFiles>("delete_files", {
          fileKeys: images
       });
+      
+      await resetCache()
 
       return { success: "Property deleted successfully!" }
-
    } catch (error) {
       console.error('Failed to delete property listing:', error);
       return {
@@ -236,6 +239,8 @@ export async function updatePropertyListing({ formData, propertyId }: { formData
          }
       })
 
+      await resetCache()
+      
       return {
          success: "Property updated successfully!"
       }
@@ -306,6 +311,7 @@ export async function togglePropoertyStatus(propertyId: string) {
       };
    }finally {
       revalidatePath(`/properties/${propertyId}`)
+      await resetCache()
    }
 }
 
