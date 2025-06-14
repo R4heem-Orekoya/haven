@@ -7,4 +7,5 @@ export const redis = new Redis({
 
 export async function resetCache () {
   redis.del("properties:hero")
+  redis.del("properties:all:1")
 }
